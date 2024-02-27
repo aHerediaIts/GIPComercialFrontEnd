@@ -19,7 +19,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="cliente">Cliente</label>
-                            <select [(ngModel)]="proyecto.cliente.id"
+                            <select (change)="getCliente()" [(ngModel)]="proyecto.cliente.id"
                                 [ngClass]="{'is-invalid': submittedP && fp.cliente.errors}" id="cliente"
                                 autocomplete="off" class="form-control" name="cliente" formControlName="cliente">
                                 <option [ngValue]="undefined" [disabled]="true">Seleccionar opción</option>
@@ -74,7 +74,18 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-sm-12 col-md-4">
+                        <ng-container *ngIf="proyecto.cliente !== undefined">
+                            <ng-container *ngIf="proyecto.cliente.nomenclatura === 'COL'">
+                                <div class="form-group col-sm-12 col-md-3">
+                                    <label for="rfProyecto">RF Proyecto</label>
+                                    <input [(ngModel)]="proyecto.rfProyecto" type="text" class="form-control"
+                                        id="rfProyecto" autocomplete="off" placeholder="RF Proyecto" name="rfProyecto"
+                                        formControlName="rfProyecto"
+                                        oninput="javascript:this.value=this.value.toUpperCase();" />
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <div class="form-group col-sm-12 col-md-3">
                             <label for="tipo">Tipo de Proyecto
                                 <a (click)="openAddTipoModal(tipo)">
                                     <i class="mdi mdi-plus" placement="right" ngbTooltip="Crear tipo proyecto"></i>
@@ -94,7 +105,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-12 col-md-4">
+                        <div class="form-group col-sm-12 col-md-3">
                             <label for="estadoPropuesta">Estado de Propuesta</label>
                             <select [(ngModel)]="proyecto.estadoPropuesta.id"
                                 [ngClass]="{'is-invalid': submittedP && fp.estadoPropuesta.errors}"
@@ -111,7 +122,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-12 col-md-4">
+                        <div class="form-group col-sm-12 col-md-3">
                             <label for="estadoProyecto">Estado de Proyecto</label>
                             <select [(ngModel)]="proyecto.estadoProyecto.id"
                                 [ngClass]="{'is-invalid': submittedP && fp.estadoProyecto.errors}" id="estadoProyecto"
@@ -293,7 +304,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="cliente">Cliente</label>
-                            <select [(ngModel)]="proyecto.cliente.id"
+                            <select (change)="getCliente()" [(ngModel)]="proyecto.cliente.id"
                                 [ngClass]="{'is-invalid': submittedP && fpPRP.cliente.errors}" id="cliente"
                                 autocomplete="off" class="form-control" name="cliente" formControlName="cliente">
                                 <option [ngValue]="undefined" [disabled]="true">Seleccionar opción</option>
@@ -325,27 +336,76 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-12 col-md-2">
-                            <label for="etapa">Tipo</label>
-                            <select [(ngModel)]="proyecto.etapa.id"
-                                [ngClass]="{'is-invalid': submittedP && fpPRP.etapa.errors}" id="etapa"
-                                autocomplete="off" name="etapa" formControlName="etapa" class="form-control">
-                                <option [ngValue]="undefined" [disabled]="true">Seleccionar opción</option>
-                                <option *ngFor="let e of etapas" [ngValue]="e.id">{{ e.etapa }}</option>
-                            </select>
-                            <div class="invalid-feedback" *ngIf="submittedP && fpPRP.etapa.errors">
-                                <div *ngIf="fpPRP.etapa.errors.required">
-                                    Este campo es requerido
+                        <ng-container *ngIf="proyecto.cliente !== undefined">
+                            <ng-container *ngIf="proyecto.cliente.nomenclatura === 'COL'">
+                                <div class="form-group col-sm-12 col-md-3">
+                                    <label for="rfProyecto">RF Proyecto</label>
+                                    <input [(ngModel)]="proyecto.rfProyecto" type="text" class="form-control"
+                                        id="rfProyecto" autocomplete="off" placeholder="RF Proyecto" name="rfProyecto"
+                                        formControlName="rfProyecto"
+                                        oninput="javascript:this.value=this.value.toUpperCase();" />
+                                </div>
+                            </ng-container>
+                        </ng-container>
+
+                        <ng-container *ngIf="proyecto.cliente !== undefined">
+                            <ng-container *ngIf="proyecto.cliente.nomenclatura !== 'COL'">
+                                <div class="form-group col-sm-12 col-md-2">
+                                    <label for="etapa">Tipo</label>
+                                    <select [(ngModel)]="proyecto.etapa.id"
+                                        [ngClass]="{'is-invalid': submittedP && fpPRP.etapa.errors}" id="etapa"
+                                        autocomplete="off" name="etapa" formControlName="etapa" class="form-control">
+                                        <option [ngValue]="undefined" [disabled]="true">Seleccionar opción</option>
+                                        <option *ngFor="let e of etapas" [ngValue]="e.id">{{ e.etapa }}</option>
+                                    </select>
+                                    <div class="invalid-feedback" *ngIf="submittedP && fpPRP.etapa.errors">
+                                        <div *ngIf="fpPRP.etapa.errors.required">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-3">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" name="nombre" id="nombre" class="form-control" disabled
+                                        [value]="getNombreConcat()">
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <ng-container *ngIf="proyecto.cliente !== undefined">
+                        <ng-container *ngIf="proyecto.cliente.nomenclatura === 'COL'">
+                            <div class="form-row">
+
+                                <div class="form-group col-sm-12 col-md-4">
+                                    <label for="directorClientC">Director asignado</label>
+                                    <input [(ngModel)]="proyecto.directorClient" type="text" class="form-control"
+                                        id="directorClientC" autocomplete="off" placeholder="Director asignado"
+                                        name="directorClientC" formControlName="directorClientC"
+                                        oninput="javascript:this.value=this.value.toUpperCase();" />
+                                </div>
+
+                                <div class="form-group col-sm-12 col-md-2">
+                                    <label for="etapa">Tipo</label>
+                                    <select [(ngModel)]="proyecto.etapa.id"
+                                        [ngClass]="{'is-invalid': submittedP && fpPRP.etapa.errors}" id="etapa"
+                                        autocomplete="off" name="etapa" formControlName="etapa" class="form-control">
+                                        <option [ngValue]="undefined" [disabled]="true">Seleccionar opción</option>
+                                        <option *ngFor="let e of etapas" [ngValue]="e.id">{{ e.etapa }}</option>
+                                    </select>
+                                    <div class="invalid-feedback" *ngIf="submittedP && fpPRP.etapa.errors">
+                                        <div *ngIf="fpPRP.etapa.errors.required">
+                                            Este campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-3">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" name="nombre" id="nombre" class="form-control" disabled
+                                        [value]="getNombreConcat()">
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group col-sm-12 col-md-3">
-                            <label for="nombre">Nombre</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" disabled
-                                [value]="getNombreConcat()">
-                        </div>
-                    </div>
+                        </ng-container>
+                    </ng-container>
                     <div class="form-row">
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="tipo">Tipo de Proyecto

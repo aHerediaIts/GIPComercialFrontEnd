@@ -173,6 +173,7 @@ export class FormProyectoComponent implements OnInit {
             ]],
             fechaFin: ['',],
             directorClient: ['',],
+            rfProyecto: ['', ],
             directorIts: ['', [
                 Validators.required
             ]],
@@ -204,6 +205,8 @@ export class FormProyectoComponent implements OnInit {
             estadoPropuesta: ['', [
                 Validators.required
             ]],
+            directorClientC: ['',],
+            rfProyecto: ['', ],
             estadoProyecto: ['', [
                 Validators.required
             ]],
@@ -333,6 +336,8 @@ export class FormProyectoComponent implements OnInit {
     }
 
     saveProyecto() {
+        console.log(this.proyecto);
+        console.log(this.proyecto.rfProyecto);
         this.proyecto.creador = this.session['nombre'];
         this.proyectoService.createProyecto(this.proyecto).subscribe(data => {
             this.toastr.success('Proyecto guardado correctamente!');
@@ -363,8 +368,6 @@ export class FormProyectoComponent implements OnInit {
         if (this.formProyecto.invalid && this.proyecto.etapa.id == 2) {
             return;
         }
-
-
 
         this.showSpinner();
         this.saveProyecto();

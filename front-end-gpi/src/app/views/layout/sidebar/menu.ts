@@ -85,7 +85,7 @@ export const MENU_ADMIN: MenuItem[] = [
                 link: '/proyectos'
             },
             {
-                label: 'Proyectos internos',
+                label: 'Novedades',
                 link: '/proyectos/internos'
             },
             {
@@ -195,7 +195,7 @@ export const MENU_DP: MenuItem[] = [
                 link: '/proyectos'
             },
             {
-                label: 'Proyectos internos',
+                label: 'Novedades',
                 link: '/proyectos/internos'
             }, 
             {
@@ -347,7 +347,7 @@ export const MENU_GP: MenuItem[] = [
                 link: '/proyectos'
             },
             {
-                label: 'Proyectos internos',
+                label: 'Novedades',
                 link: '/proyectos/internos'
             },
             {

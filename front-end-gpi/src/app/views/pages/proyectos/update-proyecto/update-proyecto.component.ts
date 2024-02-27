@@ -184,6 +184,7 @@ export class UpdateProyectoComponent implements OnInit {
             fechaAprobacion: ['', [
                 Validators.required
             ]],
+            rfProyecto: ['',],
             fechaInicio: ['', [
                 Validators.required
             ]],
@@ -217,6 +218,8 @@ export class UpdateProyectoComponent implements OnInit {
             tipo: ['', [
                 Validators.required
             ]],
+            rfProyecto: ['',],
+            directorClientC: ['',],
             estadoPropuesta: ['', [
                 Validators.required
             ]],
@@ -340,18 +343,19 @@ export class UpdateProyectoComponent implements OnInit {
     }
 
     getNombreConcat() {
-        if (this.proyecto.etapa == null || this.proyecto.cliente == null || this.proyecto.codigo == null) {
-            return "REG - ETAPA - CLIENTE - CODIGO";
-        }
-        else if (this.proyecto.etapa.id == 1) {
+        if (this.proyecto != undefined) {
+            if (this.proyecto.etapa == null || this.proyecto.cliente == null || this.proyecto.codigo == null) {
+                return "REG - ETAPA - CLIENTE - CODIGO";
+            }
+            else if (this.proyecto.etapa.id == 1) {
 
-            return 'REG-' + "PRP" + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
-        }
-        else if (this.proyecto.etapa.id == 2) {
+                return 'REG-' + "PRP" + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
+            }
+            else if (this.proyecto.etapa.id == 2) {
 
-            return 'REG-' + "CRN" + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
+                return 'REG-' + "CRN" + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
+            }
         }
-
         //return 'REG-' +  + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
     }
 
@@ -433,6 +437,15 @@ export class UpdateProyectoComponent implements OnInit {
         }, error => {
             console.log(error);
             this.toastr.error(error);
+        });
+    }
+
+    async getCliente() {
+        await this.clienteService.getClienteById(this.proyecto.cliente.id).subscribe(data => {
+            this.proyecto.cliente = data;
+        }, error => {
+            console.log(error);
+            this.toastr.error(error.error);
         });
     }
 

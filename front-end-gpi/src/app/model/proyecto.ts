@@ -11,6 +11,7 @@ export class Proyecto {
     codigo: string;
     costo: number;
     nombre: string;
+    rfProyecto: string;
     descripcion: string;
     fechaCreacion: Date;
     fechaAprobacion: Date;
