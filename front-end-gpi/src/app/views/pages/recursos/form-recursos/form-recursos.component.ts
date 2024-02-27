@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { DependenciaEmpleado } from 'src/app/Model/dependencia-empleado';
-import { EstadoEmpleado } from 'src/app/Model/estado-empleado';
+import { DependenciaEmpleado } from 'src/app/model/dependencia-empleado';
+import { EstadoEmpleado } from 'src/app/model/estado-empleado';
 import { DependenciaEmpleadoService } from 'src/app/service/dependencia-empleado.service';
 import { EstadoEmpleadoService } from '../../../../service/estado-empleado.service';
 import { CargoService } from '../../../../service/cargo.service';
@@ -44,6 +44,7 @@ export class FormRecursosComponent implements OnInit {
     newCargo: Cargo = new Cargo();
     newRol: Rol = new Rol();
     addedRoles: EmpleadoRol[] = [];
+    isChecked: boolean = false;
 
     recursoForm: FormGroup;
     submitted: boolean = false;
@@ -117,6 +118,9 @@ export class FormRecursosComponent implements OnInit {
                 Validators.maxLength(50),
                 Validators.pattern('[áéíóúñÁÉÍÓÚÑ,A-Za-z ]{5,50}')
             ]],
+            scotiaId: ['', [
+                Validators.pattern(/[a-zA-Z0-9]+/)
+            ]],
             email: ['', [
                 Validators.required,
                 Validators.minLength(5),
@@ -163,11 +167,17 @@ export class FormRecursosComponent implements OnInit {
         });
     }
 
+    validarCheked(){
+        this.isChecked = !this.isChecked;
+    }
+
     saveRecurso() {
         let _empleado;
         this.empleadoService.createEmpleado(this.empleado).subscribe(data => {
             this.toastr.success('Recurso guardado correctamente!');
-
+            console.log(this.empleado);
+            console.log(data);
+            console.log(this.empleado.scotiaID);
             this.selectedEspecialidades.forEach(e => {
                 let empleadoEspecialidad = new EmpleadoEspecialidad();
                 _empleado = data;

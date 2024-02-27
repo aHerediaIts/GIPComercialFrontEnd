@@ -63,6 +63,20 @@
 
                     </div>
                     <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-7">
+                                <label for="scotiaId">ID-Recurso</label>
+                                <input [(ngModel)]="empleado.scotiaID"
+                                    [ngClass]="{'is-invalid': submitted && rf.scotiaId.errors}" formControlName="scotiaId"
+                                    type="text" class="form-control" id="scotiaId" name="scotiaId"
+                                     />
+                                <div class="invalid-feedback" *ngIf="submitted && rf.scotiaId.errors">
+                                    <div *ngIf="rf.scotiaId.errors.pattern">
+                                        Este campo debe contener solo letras y números.
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-row">
 
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="cargo">Cargo

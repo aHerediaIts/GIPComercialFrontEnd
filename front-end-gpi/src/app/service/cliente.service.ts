@@ -20,7 +20,7 @@ export class ClienteService {
     return this.httpClient.get<Cliente[]>(`${this.baseUrl}`, { headers: this.header});
   }
 
-  createCliente(cliente: any): Observable<Object> {
+  createCliente(cliente: Cliente): Observable<Object> {
     cliente.fechaCreacion = new Date();
     return this.httpClient.post(`${this.baseUrl}`, cliente, { headers: this.header});
   } 

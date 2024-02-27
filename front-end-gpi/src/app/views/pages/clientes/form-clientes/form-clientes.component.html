@@ -116,11 +116,13 @@
                                 </div>
                             </div>
                         </div>
-
+                        <label>
+                            <input type="checkbox" (click)="validarIdRecurso()" /> ¿Se requiere ID para los recursos?
+                        </label>
                     </div>
                     <button type="submit" id="btnGuardarCliente" class="btn btn-primary">Guardar</button>
                     <button routerLink="/clientes" id="btnCancel" class="btn btn-light">Cancelar</button>
-                </form>
+                </form>  
             </div>
         </div>
     </div>

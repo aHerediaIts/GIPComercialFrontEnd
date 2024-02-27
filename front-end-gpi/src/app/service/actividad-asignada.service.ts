@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ActividadAsignada } from '../Model/actividad-asignada';
+import { ActividadAsignada } from '../model/actividad-asignada';
 import { HttpHeaderApp } from './header';
 
 @Injectable({

@@ -57,8 +57,26 @@
                                 </div>
                             </div>
                         </div>
-
+                        <label>
+                            <input type="checkbox" (click)="validarCheked()" /> ¿El recurso necesita ID?
+                        </label>
                     </div>
+                    <ng-container *ngIf="isChecked">
+                        <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-7">
+                                <label for="scotiaId">ID-Recurso</label>
+                                <input [(ngModel)]="empleado.scotiaID"
+                                    [ngClass]="{'is-invalid': submitted && rf.scotiaId.errors}" formControlName="scotiaId"
+                                    type="text" class="form-control" id="scotiaId" name="scotiaId"
+                                     />
+                                <div class="invalid-feedback" *ngIf="submitted && rf.scotiaId.errors">
+                                    <div *ngIf="rf.scotiaId.errors.pattern">
+                                        Este campo debe contener solo letras y números.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>  
                     <div class="form-row">
                         <div class="form-group col-sm-12 col-md-7">
                             <label for="email">Correo Electrónico</label>
@@ -229,8 +247,8 @@
     </div>
     <div class="modal-body">
         <form [formGroup]="cargoForm" (ngSubmit)="saveCargo()">
-            <div class="form-row">
-                <div class="form-group col-12">
+            <div class="form-row" >
+                <div class="form-group col-md-12 grid-margin stretch-card">
                     <label for="cargo">Cargo</label>
                     <input [(ngModel)]="newCargo.cargo" [ngClass]="{'is-invalid': submittedC && cf.cargo.errors}"
                         formControlName="cargo" type="text" name="cargo" class="form-control" autocomplete="off"
@@ -257,7 +275,7 @@
         </form>
         <hr *ngIf="cargos.length > 0">
 
-        <div class="modal-body p-4" style="height: 280px;">
+        <div class="modal-body p-4" style="height: 280px;" #scrollContainer style="height: 200px; overflow-y: scroll;">
             <table class="table table-hover table-borderless text-center" *ngIf="cargos.length > 0">
                 <thead>
                     <tr>

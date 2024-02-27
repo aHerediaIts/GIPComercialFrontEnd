@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClienteService } from '../../../../service/cliente.service';
 import { EstadoClienteService } from '../../../../service/estado-cliente.service';
-import { EstadoCliente } from 'src/app/Model/estado-cliente';
+import { EstadoCliente } from 'src/app/model/estado-cliente';
 import { SectorClienteService } from '../../../../service/sector-cliente.service';
-import { SectorCliente } from 'src/app/Model/sector-cliente';
+import { SectorCliente } from 'src/app/model/sector-cliente';
 import { EmpleadoService } from 'src/app/service/empleado.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -97,8 +97,8 @@ export class FormClientesComponent implements OnInit {
     }
 
     saveCliente() {
-        console.log(this.cliente);
         this.clienteService.createCliente(this.cliente).subscribe(data => {
+            console.log(this.cliente);
             this.toastr.success('Cliente guardado correctamente!');
             this.goToClienteList();
         }, error => {
@@ -108,7 +108,9 @@ export class FormClientesComponent implements OnInit {
         });
     }
 
-
+    validarIdRecurso(){
+        this.cliente.validadorIdRecurso=1;
+    }
 
     goToClienteList() {
         this.router.navigate(['/clientes']);

@@ -11,4 +11,5 @@ export class Cliente{
     estado: EstadoCliente;
     sector: SectorCliente;
     gerenteCuenta: Empleado;
+    validadorIdRecurso: number;
 }

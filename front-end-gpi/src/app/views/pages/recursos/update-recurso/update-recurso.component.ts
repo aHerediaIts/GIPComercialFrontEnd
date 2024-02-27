@@ -11,8 +11,8 @@ import { EspecialidadService } from 'src/app/service/especialidad.service';
 import { EmpleadoEspecialidadService } from 'src/app/service/empleado-especialidad.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CausasService } from 'src/app/service/causas.service';
-import { DependenciaEmpleado } from 'src/app/Model/dependencia-empleado';
-import { EstadoEmpleado } from 'src/app/Model/estado-empleado';
+import { DependenciaEmpleado } from 'src/app/model/dependencia-empleado';
+import { EstadoEmpleado } from 'src/app/model/estado-empleado';
 import { Novedad } from 'src/app/Model/novedad';
 import { Causas } from 'src/app/Model/causas';
 import { Cargo } from 'src/app/model/cargo';
@@ -50,6 +50,7 @@ export class UpdateRecursoComponent implements OnInit {
     newRol: Rol = new Rol();
     addedRoles: EmpleadoRol[] = [];
     errorMsj: string = '';
+    isChecked: boolean = false;
 
     recursoForm: FormGroup;
     submitted: boolean = false;
@@ -130,6 +131,7 @@ export class UpdateRecursoComponent implements OnInit {
         this.buildCargoForm();
         this.buildRolForm();
         this.buildNovedadForm();
+        this.validarIdRecurso();
     }
 
     get rf() { return this.recursoForm.controls; }
@@ -147,6 +149,9 @@ export class UpdateRecursoComponent implements OnInit {
                 Validators.minLength(5),
                 Validators.maxLength(50),
                 Validators.email
+            ]],
+            scotiaId: ['', [
+                Validators.pattern(/[a-zA-Z0-9]+/)
             ]],
             cargo: ['', [
                 Validators.required
@@ -283,7 +288,11 @@ export class UpdateRecursoComponent implements OnInit {
             this.toastr.error(error.error);
         });
     }
-
+    validarIdRecurso(){
+        if(this.empleado.scotiaID != null){
+            this.isChecked = !this.isChecked;
+        }
+    }
     validDateNovedad(fechaI: Date, fechaF: Date) {
         let fechaA: Date = new Date();
         fechaA.setHours(0);

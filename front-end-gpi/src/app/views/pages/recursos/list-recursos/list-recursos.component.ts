@@ -67,6 +67,8 @@ export class ListRecursosComponent implements OnInit {
         }, error => console.log(error));
     }
 
+    
+
 
     updateEmpleado(id: number) {
         this.router.navigate(['recursos/editar/', id]);

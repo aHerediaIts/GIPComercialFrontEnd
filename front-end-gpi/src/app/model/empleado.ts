@@ -11,10 +11,12 @@ export class Empleado{
     numero: string;
     nombre: string;
     email: string;
+    scotiaID: string;
     documento: TipoDocumento;
     dependencia: DependenciaEmpleado;
     cargo: Cargo;
     estado: EstadoEmpleado;
     especialidad: EmpleadoEspecialidad;
     rol: Rol;
+    
 }
