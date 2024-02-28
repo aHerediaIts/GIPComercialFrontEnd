@@ -38,7 +38,7 @@ export class ListRecursosComponent implements OnInit {
         private router: Router,
         private toastr: ToastrService) { }
 
-    columnas: string[] = ['nombre', 'cargo', 'dependencia', 'estado', 'fechas', 'editar', 'eliminar'];
+    columnas: string[] = ['nombre', 'cargo', 'dependencia', 'estado', 'ID-Recurso' ,'fechas', 'editar', 'eliminar'];
     session = localStorage.getItem('session');
 
     ngOnInit(): void {
@@ -63,12 +63,17 @@ export class ListRecursosComponent implements OnInit {
         this.empleadoService.getEmpleadosList().subscribe(data => {
             data.sort((a, b) => (a.nombre < b.nombre ? -1 : 1));
             this.empleados = data;
+            for(let i=0; i<this.empleados.length; i++){
+                const empleado = this.empleados[i];
+                if(empleado.scotiaID == undefined){
+                    this.empleados[i].scotiaID = "No aplica";
+                }
+            }
             this.dataSource = new MatTableDataSource(this.castListObjectToStringList(this.empleados));
         }, error => console.log(error));
-    }
-
-    
-
+        console.log(this.dataSource);
+        console.log(this.empleados);
+    } 
 
     updateEmpleado(id: number) {
         this.router.navigate(['recursos/editar/', id]);
@@ -105,7 +110,7 @@ export class ListRecursosComponent implements OnInit {
             string.dependencia = obj.dependencia.dependencia;
             string.cargo = obj.cargo.cargo;
             string.estado = obj.estado.estado;
-
+            string.scotiaID= obj.scotiaID;
             listString.push(string);
         });
 
@@ -178,5 +183,6 @@ export class EmpleadoString {
     cargo: string;
     estado: string;
     especialidad: string;
+    scotiaID: string;
 }
 
