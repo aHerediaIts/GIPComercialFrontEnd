@@ -55,7 +55,7 @@ export class ListProyectoComponent implements OnInit {
 
     @ViewChild(MatSort) sort: MatSort;
 
-    columnas: string[] = ['nombre', 'estadoProyecto', 'cliente', 'etapa', 'creador', 'fecha_creacion', 'planeacion', 'facturacion', 'editar', 'eliminar'];
+    columnas: string[] = ['nombre', 'estadoProyecto', 'cliente','rfProyecto', 'etapa', 'creador', 'fecha_creacion', 'planeacion', 'facturacion', 'editar', 'eliminar'];
 
     session = localStorage.getItem('session');
 
@@ -227,7 +227,6 @@ export class ListProyectoComponent implements OnInit {
             this.dataSource.data = data;
             return;
         }
-        console.log(data);
         data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             return this.onCondition(sort.active, isAsc, a, b);
@@ -247,6 +246,7 @@ export class ListProyectoComponent implements OnInit {
             case 'cliente': return this.compare(a.cliente, b.cliente, orden);
             case 'etapa': return this.compare(a.etapa, b.etapa, orden);
             case 'creador': return this.compare(a.creador, b.creador, orden);
+            case 'rfProyecto': return this.compare(a.rfProyecto, b.rfProyecto, orden);
             case 'fecha_creacion': {
                 const dateA = a.fechaCreacion.split('/');
                 const dateB = b.fechaCreacion.split('/');
@@ -267,6 +267,7 @@ export class ListProyectoComponent implements OnInit {
             string.costo = obj.costo;
             string.nombre = obj.nombre;
             string.descripcion = obj.descripcion;
+            string.rfProyecto = obj.rfProyecto;
 
             if (obj.fechaCreacion == null) {
                 string.fechaCreacion = '';
@@ -358,4 +359,5 @@ export class ProyectoString {
     directorClient: string;
     lider: string;
     creador: string;
+    rfProyecto: string;
 }

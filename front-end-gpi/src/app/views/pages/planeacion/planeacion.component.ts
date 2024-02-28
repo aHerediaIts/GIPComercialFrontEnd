@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { Actividad } from 'src/app/Model/actividad';
+import { Actividad } from 'src/app/model/actividad';
 import { ActividadAsignadaService } from 'src/app/service/actividad-asignada.service';
 import { ActividadService } from 'src/app/service/actividad.service';
 import { FaseProyectoService } from 'src/app/service/fase-proyecto.service';
 import { ProyectoService } from 'src/app/service/proyecto.service';
-import { FaseProyecto } from 'src/app/Model/fase-proyecto';
+import { FaseProyecto } from 'src/app/model/fase-proyecto';
 import { EmpleadoService } from 'src/app/service/empleado.service';
-import { RecursoActividad } from 'src/app/Model/recurso-actividad';
+import { RecursoActividad } from 'src/app/model/recurso-actividad';
 import { RecursoActividadService } from 'src/app/service/recurso-actividad.service';
 import { ReporteTiempoService } from 'src/app/service/reporte-tiempo.service';
-import { ReporteTiempo } from 'src/app/Model/reporte-tiempo';
+import { ReporteTiempo } from 'src/app/model/reporte-tiempo';
 import { Proyecto } from 'src/app/Model/proyecto';
-import { ActividadAsignada } from 'src/app/Model/actividad-asignada';
+import { ActividadAsignada } from 'src/app/model/actividad-asignada';
 import { Empleado } from 'src/app/model/empleado';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Especialidad } from 'src/app/model/especialidad';
@@ -239,8 +239,8 @@ export class PlaneacionComponent implements OnInit {
         this.selectedFase = new FaseProyecto();
     }
 
-    getFases() {
-        this.proyectoService.getProyectoById(this.idProyecto).subscribe(data => {
+    async getFases() {
+        await this.proyectoService.getProyectoById(this.idProyecto).subscribe(data => {
             this.proyecto = data;
             this.fases = [];
             if (this.proyecto.etapa.etapa === 'CRN') {
@@ -265,8 +265,6 @@ export class PlaneacionComponent implements OnInit {
                     console.log(error);
                 });
             }
-
-
         }, error => {
             console.log(error);
         });
