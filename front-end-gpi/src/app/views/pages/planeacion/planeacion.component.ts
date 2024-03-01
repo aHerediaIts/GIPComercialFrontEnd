@@ -533,25 +533,31 @@ export class PlaneacionComponent implements OnInit {
 
             recursoAct.asignador = this.sessionObject.nombre;
         });
-
-        this.recursoActService.createRecursoActividadList(list).subscribe(data => {
-            this.hideDisponibilidad();
-            this.getEmpleadoAsignados();
-            this.getActividadesAsignadas();
-            console.log("RESPUESTA FECHAS ASIGNADAS: ", data);
-            if (Object.entries(data).length > 0) {
-                if (Object.entries(data).length === list.length) {
-                    this.toast.success('El recurso se ha agregado correctamente a la actividad');
-                } else {
-                    this.toast.warning('El recurso se ha agregado, pero algunas de las fechas ya tienen recursos asignados');
-                }
-            } else {
-                this.toast.info('Ya existen recursos asignados a las fechas seleccionadas');
+        for(let i=0; i<list.length; i++){
+            const validador = list[i];
+            if( validador.actividad.proyecto.cliente.validadorIdRecurso != null && validador.empleado.scotiaID == null){
+                    this.toast.warning('El recurso, no tiene un id de recurso, como lo solicita el cliente');
+            }else{
+                this.recursoActService.createRecursoActividadList(list).subscribe(data => {
+                    this.hideDisponibilidad();
+                    this.getEmpleadoAsignados();
+                    this.getActividadesAsignadas();
+                    console.log("RESPUESTA FECHAS ASIGNADAS: ", data);
+                    if (Object.entries(data).length > 0) {
+                        if (Object.entries(data).length === list.length) {
+                            this.toast.success('El recurso se ha agregado correctamente a la actividad');
+                        } else {
+                            this.toast.warning('El recurso se ha agregado, pero algunas de las fechas ya tienen recursos asignados');
+                        }
+                    } else {
+                        this.toast.info('Ya existen recursos asignados a las fechas seleccionadas');
+                    }
+                }, error => {
+                    console.log(error);
+                    this.toast.error(error.error);
+                });
             }
-        }, error => {
-            console.log(error);
-            this.toast.error(error.error);
-        });
+        }
     }
 
     getEmpleadoAsignados() {
