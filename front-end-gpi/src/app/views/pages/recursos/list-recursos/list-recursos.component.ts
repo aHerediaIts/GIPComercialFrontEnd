@@ -66,7 +66,7 @@ export class ListRecursosComponent implements OnInit {
             for(let i=0; i<this.empleados.length; i++){
                 const empleado = this.empleados[i];
                 if(empleado.scotiaID == undefined){
-                    this.empleados[i].scotiaID = "No aplica";
+                    this.empleados[i].scotiaID = "N/A";
                 }
             }
             this.dataSource = new MatTableDataSource(this.castListObjectToStringList(this.empleados));

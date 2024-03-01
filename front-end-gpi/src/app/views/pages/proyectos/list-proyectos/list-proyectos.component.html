@@ -91,9 +91,10 @@
                             </ng-container>
 
                             <ng-container matColumnDef="rfProyecto">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="mdi mdi-15px"> RF Proyecto </th>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="mdi mdi-15px"> RF Proyecto
+                                </th>
                                 <td class="text-wrap" mat-cell *matCellDef="let proyecto" id="rf_proyecto">
-                                    {{proyecto.rfProyecto}} </td>
+                                    {{ proyecto.rfProyecto !== null ? proyecto.rfProyecto : "N/A" }} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="etapa">
