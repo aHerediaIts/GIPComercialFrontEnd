@@ -51,6 +51,10 @@ export const MENU_ADMIN: MenuItem[] = [
         icon: 'compass',
         subItems: [
             {
+                label: 'Cargue masivo',
+                link: '/reporte-tiempo/cargue-masivo'
+            },
+            {
                 label: 'Nuevo reporte',
                 link: '/reporte-tiempo/nuevo'
             },
@@ -235,6 +239,10 @@ export const MENU_DP: MenuItem[] = [
         icon: 'compass',
         subItems: [
             {
+                label: 'Cargue masivo',
+                link: '/reporte-tiempo/cargue-masivo'
+            },
+            {
                 label: 'Nuevo reporte',
                 link: '/reporte-tiempo/nuevo'
             },
@@ -366,6 +374,10 @@ export const MENU_GP: MenuItem[] = [
         icon: 'compass',
         subItems: [
             {
+                label: 'Cargue masivo',
+                link: '/reporte-tiempo/cargue-masivo'
+            },
+            {
                 label: 'Nuevo reporte',
                 link: '/reporte-tiempo/nuevo'
             },
@@ -483,6 +495,10 @@ export const MENU_LP: MenuItem[] = [
         label: 'Reporte tiempos',
         icon: 'compass',
         subItems: [
+            {
+                label: 'Cargue masivo',
+                link: '/reporte-tiempo/cargue-masivo'
+            },
             {
                 label: 'Nuevo reporte',
                 link: '/reporte-tiempo/nuevo'

@@ -1,0 +1,73 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/proyectos">Proyectos</a></li>
+        <li class="breadcrumb-item">
+            <a routerLink="/reporte-tiempo/horas-reportadas">Reportes</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Carga Masiva</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center" id="occ">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <span>Carga Masiva de Tiempos </span>
+                </h6>
+                <form [formGroup]="formCliente" (ngSubmit)="onSubmit()" id="cargaMasivaForm"
+                    enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="cliente">Cliente</label>
+                            <select formControlName="cliente" (change)="filtrarProyectos()" [(ngModel)]="cliente"
+                                [ngClass]="{'is-invalid': fp.cliente.errors && fp.cliente.touched}" id="cliente" class="form-control"
+                                autocomplete="off">
+                                <option [value]="undefined" disabled hidden>Seleccionar cliente</option>
+                                <option *ngFor="let clt of clientes" [ngValue]="clt">{{ clt.nombre }}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="fp.cliente.errors && fp.cliente.touched">
+                                <div *ngIf="fp.cliente.errors.required">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-8">
+                            <label for="proyecto">Proyecto</label>
+                            <select formControlName="proyecto" [(ngModel)]="proyecto"
+                                [ngClass]="{'is-invalid': fp.proyecto.errors}" id="proyecto" class="form-control"
+                                autocomplete="off">
+                                <option [value]="undefined" disabled hidden>Seleccionar proyecto</option>
+                                <option *ngFor="let p of proyectosFiltrados" [ngValue]="p"> {{ p.nombre }} -
+                                    {{p.descripcion}} </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="fp.proyecto.errors && fp.proyecto.touched">
+                                <div *ngIf="fp.proyecto.errors.required">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                            <div *ngIf="cliente === undefined" class="invalid-feedback">
+                                <div *ngIf="formCliente.controls.proyecto.errors">
+                                    Seleccione un cliente para cargar los proyectos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="archivo"></label>
+                            <input type="file" id="archivo" (change)="onFileSelected($event)"
+                                class="form-control-file" [ngClass]="{'is-invalid': file === undefined}" accept=".xlsx, .xls">
+                            <div class="invalid-feedback" *ngIf="file === undefined">
+                                Debes seleccionar un archivo.
+                            </div>
+
+                        </div>
+                    </div>
+                    <button type="submit" id="btnSelectProyecto" class="btn btn-light">Realizar Cargue Masivo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

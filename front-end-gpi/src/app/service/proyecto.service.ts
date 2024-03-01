@@ -28,6 +28,12 @@ export class ProyectoService {
         return this.httpClient.get<Proyecto[]>(`${this.baseUrl}/asignados/searchBetweenFechaInicioAndFechaFin/${fechaInicio}/${fechaFin}/${idEmpleado}`, { headers: this.header });
     }
 
+    createCargaMasiva(file: File): Observable<Object> {
+        const formData: FormData = new FormData();
+        formData.append('file', file);
+        return this.httpClient.post<any>(`${this.baseUrl}/carga-masiva`, formData);
+    }
+
     createProyecto(proyecto: Proyecto): Observable<Object> {
         return this.httpClient.post(`${this.baseUrl}`, proyecto, { headers: this.header });
     }
@@ -36,7 +42,7 @@ export class ProyectoService {
         return this.httpClient.get<Proyecto>(`${this.baseUrl}/${id}`, { headers: this.header });
     }
 
-    updateProyecto(id: number, proyecto: Proyecto,creator: number): Observable<Object> {
+    updateProyecto(id: number, proyecto: Proyecto, creator: number): Observable<Object> {
         return this.httpClient.put(`${this.baseUrl}/${id}/${creator}`, proyecto, { headers: this.header });
     }
 
@@ -96,11 +102,11 @@ export class ProyectoService {
         return this.httpClient.post(`${this.baseUrl}/internos`, proyecto, { headers: this.header });
     }
 
-    updateProyectoInt(idProyecto:number, proyecto:Proyecto):Observable<Object> {
+    updateProyectoInt(idProyecto: number, proyecto: Proyecto): Observable<Object> {
         return this.httpClient.put(`${this.baseUrl}/internos/${idProyecto}`, proyecto, { headers: this.header });
     }
 
-    deleteProyectoInt(id:number):Observable<Object> {
+    deleteProyectoInt(id: number): Observable<Object> {
         return this.httpClient.delete(`${this.baseUrl}/internos/${id}`, { headers: this.header });
     }
 

@@ -27,6 +27,7 @@ import { FormProyectoComponent } from './views/pages/proyectos/form-proyecto/for
 import { UpdateProyectoComponent } from './views/pages/proyectos/update-proyecto/update-proyecto.component';
 import { FormReporteComponent } from './views/pages/reporte-tiempos/form-reporte/form-reporte.component';
 import { PlaneacionComponent } from './views/pages/planeacion/planeacion.component';
+import { CargaMasivaComponent } from './views/pages/reporte-tiempos/carga-masiva/carga-masiva-component';
 import { NovedadesComponent } from './views/pages/novedades/novedades.component';
 import { UpdateRecursoComponent } from './views/pages/recursos/update-recurso/update-recurso.component';
 import { DetalleAprobarTiempoComponent } from './views/pages/reporte-tiempos/detalle-aprobar-tiempo/detalle-aprobar-tiempo.component';
@@ -78,6 +79,7 @@ registerLocaleData(localeEs, 'es');
         UpdateClientesComponent,
         ProgramarFacturacionComponent,
         ListProyectoComponent,
+        CargaMasivaComponent,
         FormProyectoComponent,
         UpdateProyectoComponent,
         FormReporteComponent,
