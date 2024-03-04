@@ -51,6 +51,7 @@ export class UpdateRecursoComponent implements OnInit {
     addedRoles: EmpleadoRol[] = [];
     errorMsj: string = '';
     isChecked: boolean = false;
+    isCheckedlabel: boolean = false;
 
     recursoForm: FormGroup;
     submitted: boolean = false;
@@ -94,6 +95,12 @@ export class UpdateRecursoComponent implements OnInit {
 
         this.empleadoService.getEmpleadoById(this.id).subscribe(data => {
             this.empleado = data;
+            console.log(this.empleado);
+            if(this.empleado.scotiaID == null){
+                this.isCheckedlabel = !this.isCheckedlabel;
+            }else{
+                this.isChecked = !this.isChecked;
+            }
         }, error => {
             console.log(error);
             this.toastr.error(error.error.message);
@@ -131,7 +138,6 @@ export class UpdateRecursoComponent implements OnInit {
         this.buildCargoForm();
         this.buildRolForm();
         this.buildNovedadForm();
-        this.validarIdRecurso();
     }
 
     get rf() { return this.recursoForm.controls; }
@@ -229,7 +235,6 @@ export class UpdateRecursoComponent implements OnInit {
 
 
         this.showSpinner();
-
         this.empleadoService.updateEmpleado(this.id, this.empleado).subscribe(data => {
             this.toastr.info('Recurso actualizado correctamente.');
             this.goToRecursosList();
@@ -288,11 +293,7 @@ export class UpdateRecursoComponent implements OnInit {
             this.toastr.error(error.error);
         });
     }
-    validarIdRecurso(){
-        if(this.empleado.scotiaID != null){
-            this.isChecked = !this.isChecked;
-        }
-    }
+    
     validDateNovedad(fechaI: Date, fechaF: Date) {
         let fechaA: Date = new Date();
         fechaA.setHours(0);
@@ -303,6 +304,10 @@ export class UpdateRecursoComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    validarCheked(){
+        this.isChecked = !this.isChecked;
     }
 
     showNovedadModal(content) {

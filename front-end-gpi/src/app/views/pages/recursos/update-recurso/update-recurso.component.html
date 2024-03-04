@@ -60,9 +60,14 @@
                                 </div>
                             </div>
                         </div>
-
+                        <ng-container *ngIf="isCheckedlabel">
+                            <label>
+                                <input type="checkbox" (click)="validarCheked()" /> ¿El recurso necesita ID?
+                            </label>
+                        </ng-container>
                     </div>
-                    <div class="form-row">
+                    <ng-container *ngIf="isChecked">
+                        <div class="form-row">
                             <div class="form-group col-sm-12 col-md-7">
                                 <label for="scotiaId">ID-Recurso</label>
                                 <input [(ngModel)]="empleado.scotiaID"
@@ -75,7 +80,8 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
+                        </div>
+                    </ng-container>
                     <div class="form-row">
 
                         <div class="form-group col-sm-12 col-md-4">
