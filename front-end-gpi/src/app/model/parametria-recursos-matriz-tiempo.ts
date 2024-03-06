@@ -1,11 +1,10 @@
-import { EspecialidadRecurso } from "./especialidad-recurso";
-import { PerfilRecurso } from "./perfil-recurso";
+import { Cliente } from "./cliente";
+import { Empleado } from "./empleado";
 
 export class ParametriaRecursosMatrizTiempo {
     id: number;
-    especialidad: EspecialidadRecurso;
-    perfil: PerfilRecurso;
+    empleado: Empleado;
     tarifaHora: number;
     tarifaMensual: number;
-    descripcion: string;
+    cliente: Cliente;
 }

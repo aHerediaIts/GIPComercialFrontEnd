@@ -9,107 +9,272 @@
     <div class="col-md-12 stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-sm">
-                        <h6 class="card-title">Administración de Recursos</h6>
-                    </div>
+                <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
+                    <li [ngbNavItem]="1">
+                        <a ngbNavLink>Administración de Recursos</a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-12 col-sm">
+                                    <h6 class="card-title">Administración de Recursos</h6>
+                                </div>
 
-                    <div class="col-12 col-sm d-flex justify-content-end align-items-center">
-                        <a class="btn btn-outline-primary" id="btnNuevoRecurso" href="javascript:void(0);"
-                            routerLink="/recursos/nuevo">
-                            Nuevo Recurso
-                        </a>
-                    </div>
-                </div>
-
-                <div>
-                    <mat-form-field id="inputSearch">
-                        <mat-label>Buscar</mat-label>
-                        <input matInput (keyup)="filtrar($event)" placeholder="Buscar" />
-                    </mat-form-field>
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource" class="table-hover" style="width: 100%">
-                            <ng-container matColumnDef="nombre">
-                                <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                                <td mat-cell *matCellDef="let empleado">
-                                    {{ empleado.nombre }}
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="cargo">
-                                <th mat-header-cell *matHeaderCellDef>Cargo</th>
-                                <td class="w-50 text-wrap" *matCellDef="let empleado">
-                                    {{ empleado.cargo }}
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="dependencia">
-                                <th mat-header-cell *matHeaderCellDef>Dependencia</th>
-                                <td class="w-50 text-wrap" mat-cell *matCellDef="let empleado">
-                                    {{ empleado.dependencia }}
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="estado">
-                                <th mat-header-cell *matHeaderCellDef>Estado</th>
-                                <td mat-cell *matCellDef="let empleado">
-                                    {{ empleado.estado }}
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="ID-Recurso">
-                                <th mat-header-cell *matHeaderCellDef>ID-Recurso</th>
-                                <td mat-cell *matCellDef="let empleado">
-                                    {{ empleado.scotiaID }}
-                                </td>
-                            </ng-container>
-                            
-                            <ng-container matColumnDef="fechas">
-                                <th mat-header-cell *matHeaderCellDef></th>
-                                <td mat-cell *matCellDef="let empleado" class="text-right">
-                                    <a (click)="openDatesActividadModal(fechas_actividad, empleado)">
-                                        <i class="mdi mdi-24px mdi-calendar-month-outline" placement="top"
-                                            ngbTooltip="Ver Fechas Asignadas"></i>
+                                <div class="col-12 col-sm d-flex justify-content-end align-items-center">
+                                    <a class="btn btn-outline-primary" id="btnNuevoRecurso" href="javascript:void(0);"
+                                        routerLink="/recursos/nuevo">
+                                        Nuevo Recurso
                                     </a>
-                                </td>
-                            </ng-container>
+                                </div>
+                            </div>
 
-                            <ng-container matColumnDef="editar">
-                                <th mat-header-cell *matHeaderCellDef></th>
-                                <td mat-cell *matCellDef="let empleado" class="text-right">
-                                    <a *ngIf="session['rol'] == 'ROL_ADMIN' || session['rol'] == 'ROL_GP' || session['rol'] == 'ROL_LP' || session['rol'] == 'ROL_DP'"
-                                        (click)="updateEmpleado(empleado.id)" class="mdi mdi-24px mdi-pencil"></a>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="eliminar">
-                                <th mat-header-cell *matHeaderCellDef></th>
-                                <td mat-cell *matCellDef="let empleado" class="text-right">
-                                    <a *ngIf="session['rol'] == 'ROL_ADMIN' || session['rol'] == 'ROL_GP' || session['rol'] == 'ROL_DP'"
-                                        (click)="deleteModal(delete, empleado.id)"
-                                        class="mdi mdi-24px mdi-delete-forever"></a>
-                                </td>
-                            </ng-container>
+                            <div>
+                                <mat-form-field id="inputSearch">
+                                    <mat-label>Buscar</mat-label>
+                                    <input matInput (keyup)="filtrar($event)" placeholder="Buscar" />
+                                </mat-form-field>
+                                <div class="table-responsive">
+                                    <table mat-table matSort [dataSource]="dataSource" (matSortChange)="sortData($event)" class="table-hover" style="width: 100%">
+                                        <ng-container matColumnDef="nombre">
+                                            <th mat-header-cell mat-sort-header *matHeaderCellDef>Nombre</th>
+                                            <td mat-cell *matCellDef="let empleado">
+                                                {{ empleado.nombre }}
+                                            </td>
+                                        </ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-                            <tr mat-row *matRowDef="let row; columns: columnas"></tr>
-                        </table>
-                    </div>
-                </div>
+                                        <ng-container matColumnDef="cargo">
+                                            <th mat-header-cell mat-sort-header *matHeaderCellDef>Cargo</th>
+                                            <td class="w-50 text-wrap" *matCellDef="let empleado">
+                                                {{ empleado.cargo }}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="dependencia">
+                                            <th mat-header-cell mat-sort-header *matHeaderCellDef>Dependencia</th>
+                                            <td class="w-50 text-wrap" mat-cell *matCellDef="let empleado">
+                                                {{ empleado.dependencia }}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="estado">
+                                            <th mat-header-cell mat-sort-header *matHeaderCellDef>Estado</th>
+                                            <td mat-cell *matCellDef="let empleado">
+                                                {{ empleado.estado }}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="ID-Recurso">
+                                            <th mat-header-cell mat-sort-header *matHeaderCellDef>ID-Recurso</th>
+                                            <td mat-cell *matCellDef="let empleado">
+                                                {{ empleado.scotiaID }}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="fechas">
+                                            <th mat-header-cell *matHeaderCellDef></th>
+                                            <td mat-cell *matCellDef="let empleado" class="text-right">
+                                                <a (click)="openDatesActividadModal(fechas_actividad, empleado)">
+                                                    <i class="mdi mdi-24px mdi-calendar-month-outline" placement="top"
+                                                        ngbTooltip="Ver Fechas Asignadas"></i>
+                                                </a>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="editar">
+                                            <th mat-header-cell *matHeaderCellDef></th>
+                                            <td mat-cell *matCellDef="let empleado" class="text-right">
+                                                <a *ngIf="session['rol'] == 'ROL_ADMIN' || session['rol'] == 'ROL_GP' || session['rol'] == 'ROL_LP' || session['rol'] == 'ROL_DP'"
+                                                    (click)="updateEmpleado(empleado.id)"
+                                                    class="mdi mdi-24px mdi-pencil"></a>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="eliminar">
+                                            <th mat-header-cell *matHeaderCellDef></th>
+                                            <td mat-cell *matCellDef="let empleado" class="text-right">
+                                                <a *ngIf="session['rol'] == 'ROL_ADMIN' || session['rol'] == 'ROL_GP' || session['rol'] == 'ROL_DP'"
+                                                    (click)="deleteModal(delete, empleado.id, 'ADMIN')"
+                                                    class="mdi mdi-24px mdi-delete-forever"></a>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="2">
+                        <a ngbNavLink>Párametros de Recursos</a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-12 col-sm">
+                                    <h6 class="card-title">Párametros de Recursos</h6>
+                                </div>
+                                <div class="col-12 col-sm d-flex justify-content-end align-items-center">
+                                    <button type="submit" class="btn btn-outline-primary"
+                                        (click)="openModalRecurso(agregarRecurso, 'add')">
+                                        Parametrizar Recurso
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <mat-form-field id="inputSearch">
+                                    <mat-label>Buscar</mat-label>
+                                    <input matInput (keyup)="filtrarRecurso($event)" placeholder="Buscar" />
+                                </mat-form-field>
+                                <div class="table-responsive">
+                                    <table mat-table matSort [dataSource]="dataSourceParametros" (matSortChange)="sortDataParm($event)" class="table-hover"
+                                        style="width: 100%;">
+ 
+                                        <ng-container matColumnDef="nombre">
+                                            <th mat-header-cell mat-sort-header  *matHeaderCellDef>Nombre de recurso</th>
+                                            <td mat-cell *matCellDef="let parametros"> {{parametros.nombre}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="tarifaHora">
+                                            <th mat-header-cell mat-sort-header  *matHeaderCellDef>Tarifa actual por hora</th>
+                                            <td mat-cell *matCellDef="let parametros"> {{parametros.tarifaHora}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="tarifaMensual">
+                                            <th mat-header-cell mat-sort-header  *matHeaderCellDef>Tarifa por
+                                                mensualidad</th>
+                                            <td mat-cell *matCellDef="let parametros">
+                                                {{parametros.tarifaMensual}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cliente">
+                                            <th mat-header-cell mat-sort-header  *matHeaderCellDef>Cliente</th>
+                                            <td mat-cell *matCellDef="let parametros">
+                                                {{parametros.cliente}}</td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="opciones">
+                                            <th mat-header-cell *matHeaderCellDef class="text-center">Opciones</th>
+                                            <td mat-cell *matCellDef="let parametros" class="text-center">
+                                                <div>
+                                                    <a *ngIf="session['rol'] == 'ROL_ADMIN' || session['rol'] == 'ROL_GP' || session['rol'] == 'ROL_DP'"
+                                                        class="mdi mdi-24px mdi-pencil" ngbTooltip="Editar" (click)="openModalRecurso(agregarRecurso, 'update'); getRecurso(parametros.id)"></a>
+                                                    <a *ngIf="session['rol'] == 'ROL_ADMIN' || session['rol'] == 'ROL_GP' || session['rol'] == 'ROL_DP'" (click)="deleteModal(delete, parametros.id, 'PARMS')"
+                                                        class="mdi mdi-24px mdi-delete-forever"
+                                                        ngbTooltip="Eliminar"></a>
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="columnasParametros"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: columnasParametros;"></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- MODAL ADICIONAR RECURSO -->
+
+<ng-template #agregarRecurso let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+            {{ title }}
+        </h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <form [formGroup]="formParametrosRecursos" (ngSubmit)="saveParametrosRecursos()">
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-12">
+                    <label for="recurso">Recursos</label>
+                    <select [(ngModel)]="parametrosRecurso.empleado"
+                        [ngClass]="{'is-invalid': r.empleado.errors && r.empleado.touched}"
+                        formControlName="empleado" id="recurso" class="form-control">
+                        <option [ngValue]="undefined" disabled hidden>Seleccionar opción</option>
+                        <option *ngIf="!editMode && parametrosRecurso.empleado !== undefined" [ngValue]="parametrosRecurso.empleado" disabled hidden>{{ parametrosRecurso.empleado.nombre }}</option>
+                        <option *ngFor="let e of empleadosList" [ngValue]="e">{{ e.nombre }}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="r.empleado.errors && r.empleado.touched">
+                        <div *ngIf="r.empleado.errors.required">
+                            Este campo es requerido.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-12">
+                    <label for="cliente">Cliente</label>
+                    <select [(ngModel)]="parametrosRecurso.cliente"
+                        [ngClass]="{'is-invalid': r.cliente.errors && r.cliente.touched}"
+                        formControlName="cliente" id="cliente" class="form-control">
+                        <option [ngValue]="undefined" disabled hidden>Seleccionar opción</option>
+                        <option *ngIf="!editMode && parametrosRecurso.cliente !== undefined" [ngValue]="parametrosRecurso.cliente" disabled hidden> {{ parametrosRecurso.cliente.nombre }}</option>
+                        <option *ngFor="let c of clientes" [ngValue]="c">{{ c.nombre }}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="r.cliente.errors && r.cliente.touched">
+                        <div *ngIf="r.cliente.errors.required">
+                            Este campo es requerido.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-12">
+                    <label for="tarifaHora">Tarifa por hora</label>
+                    <input [(ngModel)]="tarifaHoraFormatter" (input)="tarifaHoraFormatter = formatTarifa(tarifaHoraFormatter)"
+                        [ngClass]="{'is-invalid': r.tarifaHora.errors && r.tarifaHora.touched}"
+                        formControlName="tarifaHora" id="tarifaHora" type="text" class="form-control" autocomplete="off"
+                        placeholder="Tarifa por hora" (keydown)="validarNumeros($event)">
+                    <div class="invalid-feedback"
+                        *ngIf="r.tarifaHora.errors && r.tarifaHora.touched">
+                        <div *ngIf="r.tarifaHora.errors.required">
+                            Este campo es requerido.
+                        </div>
+                        <div *ngIf="r.tarifaHora.errors.pattern && r.tarifaHora.touched">
+                            Este campo debe ser mayor a 0.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-12">
+                    <label for="tarifaMensual">Tarifa mensual</label>
+                    <input [(ngModel)]="tarifaMesFormatter" (input)="tarifaMesFormatter = formatTarifa(tarifaMesFormatter)"
+                        [ngClass]="{'is-invalid': r.tarifaMensual.errors && r.tarifaMensual.touched}"
+                        formControlName="tarifaMensual" id="tarifaMensual" type="text" class="form-control"
+                        autocomplete="off" placeholder="Tarifa mensual" currencyMask (keydown)="validarNumeros($event)">
+                    <div class="invalid-feedback"
+                        *ngIf="r.tarifaMensual.errors && r.tarifaMensual.touched">
+                        <div *ngIf="r.tarifaMensual.errors.required">
+                            Este campo es requerido.
+                        </div>
+                        <div *ngIf="r.tarifaMensual.errors.pattern && r.tarifaMensual.touched">
+                            Este campo debe ser mayor a 0.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-light ml-2" (click)="d('Close click'); clearRecurso()">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
 <!-- CONFIRM DELETE MODAL -->
 <ng-template #delete let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Confirmar eliminacion</h4>
+        <h4 class="modal-title" id="modal-basic-title">Confirmar Eliminación</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <p>¿Estas seguro de eliminar este recurso?</p>
+        <p>¿Estás seguro de eliminar este recurso?</p>
     </div>
     <div class="modal-footer">
         <button id="btnModalDelete" type="submit" class="btn btn-danger" (click)="deleteRecurso()">

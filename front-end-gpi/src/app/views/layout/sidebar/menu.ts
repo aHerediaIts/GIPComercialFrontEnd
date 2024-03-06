@@ -201,24 +201,7 @@ export const MENU_DP: MenuItem[] = [
             {
                 label: 'Novedades',
                 link: '/proyectos/internos'
-            }, 
-            {
-                label: 'Matriz de tiempos',
-                subItems: [
-                    {
-                        label: 'Actualizar parámetros',
-                        link: '/parametria-matriz-tiempos'
-                    },
-                    {
-                        label: 'Generar matriz de tiempos',
-                        link: '/generacion-matriz-tiempos'
-                    },
-                    {
-                        label: 'Matrices históricas',
-                        link: '/generacion-informes-historicos'
-                    }
-                ]
-            },  
+            },   
             {
                 label: 'Project Status Report',
                 subItems: [
@@ -584,22 +567,5 @@ export const ROL_QA: MenuItem[] = [
     {
         label: 'Administracion',
         isTitle: true
-    },
-    {
-        label: 'Matriz de tiempos',
-        subItems: [
-            {
-                label: 'Actualizar parámetros',
-                link: '/parametria-matriz-tiempos'
-            },
-            {
-                label: 'Generar matriz de tiempos',
-                link: '/generacion-matriz-tiempos'
-            },
-            {
-                label: 'Matrices históricas',
-                link: '/generacion-informes-historicos'
-            }
-        ]
     }
 ];

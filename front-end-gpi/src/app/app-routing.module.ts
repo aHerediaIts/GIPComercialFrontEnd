@@ -35,9 +35,6 @@ import { ReporteTiemposPendientesEmpleadosComponent } from './views/pages/report
 import { CrearPsrComponent } from './views/pages/project-status-report/crear-psr/crear-psr.component';
 import { ListPsrComponent } from './views/pages/project-status-report/list-psr/list-psr.component';
 import { InformePsrComponent } from './views/pages/informes/informe-psr/informe-psr.component'
-import { ParametriaMatrizTiempos } from './views/pages/parametria-matriz-tiempos/parametria-matriz-tiempos.component';
-import { GeneracionMatrizTiempos } from './views/pages/parametria-matriz-tiempos/generacion-matriz-tiempos/generacion-matriz-tiempos.component';
-import { GenracionInfotmesHistoricos } from './views/pages/parametria-matriz-tiempos/infomes-historicos/generacion-informes-historicos.component';
 import { ExitGuard } from './views/pages/project-status-report/exit.guard';
 
 const routes: Routes = [
@@ -150,15 +147,6 @@ const routes: Routes = [
             },
             {
                 path: 'informes/informe-psr', component: InformePsrComponent
-            },
-            {
-                path: 'parametria-matriz-tiempos', component: ParametriaMatrizTiempos
-            },
-            {
-                path: 'generacion-matriz-tiempos', component: GeneracionMatrizTiempos
-            },
-            {
-                path: 'generacion-informes-historicos', component: GenracionInfotmesHistoricos
             },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
