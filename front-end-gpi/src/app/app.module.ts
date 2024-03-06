@@ -60,6 +60,7 @@ import { ListPsrComponent } from './views/pages/project-status-report/list-psr/l
 import { ChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { InformePsrComponent } from './views/pages/informes/informe-psr/informe-psr.component';
+import { GestionRol } from './views/pages/gestion-usuario-rol/gestion-rol/gestion-rol.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -82,6 +83,7 @@ registerLocaleData(localeEs, 'es');
         FormReporteComponent,
         PlaneacionComponent,
         NovedadesComponent,
+        GestionRol,
         UpdateRecursoComponent,
         DetalleAprobarTiempoComponent,
         FasesComponent,

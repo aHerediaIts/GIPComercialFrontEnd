@@ -36,6 +36,7 @@ import { CrearPsrComponent } from './views/pages/project-status-report/crear-psr
 import { ListPsrComponent } from './views/pages/project-status-report/list-psr/list-psr.component';
 import { InformePsrComponent } from './views/pages/informes/informe-psr/informe-psr.component'
 import { ExitGuard } from './views/pages/project-status-report/exit.guard';
+import { GestionRol } from './views/pages/gestion-usuario-rol/gestion-rol/gestion-rol.component';
 
 const routes: Routes = [
     { path: 'auth', loadChildren: () => import('./views/pages/auth/auth.module').then(m => m.AuthModule) },
@@ -68,6 +69,9 @@ const routes: Routes = [
             },
             {
                 path: 'recursos/novedades', component: NovedadesComponent
+            },
+            {
+                path: 'gestion-rol', component: GestionRol
             },
             {
                 path: 'reporte-tiempo/cargue-masivo', component: CargaMasivaComponent
