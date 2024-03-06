@@ -31,6 +31,7 @@ export class ListRecursosComponent implements OnInit {
     recursos: ParametriaRecursosMatrizTiempo[];
     empleados: Empleado[];
     empleadosList: Empleado[];
+    backupCliente: Cliente[];
     clientes: Cliente[];
     dataSource = new MatTableDataSource();
     dataSourceParametros = new MatTableDataSource();
@@ -181,7 +182,6 @@ export class ListRecursosComponent implements OnInit {
                     this.toastr.error(error.message)
                 });
             } else {
-                console.log(this.parametrosRecurso)
                 this.parametriaRecursosService.updateParametriaRecursos(this.parametrosRecurso.id, this.parametrosRecurso).subscribe(data => {
                     this.toastr.success('Se actualizo la parametrización satisfactoriamente')
                     this.modalAgregarPerfil.close();
@@ -192,7 +192,7 @@ export class ListRecursosComponent implements OnInit {
                 })
             }
         } else {
-            this.toastr.warning("El recurso ya tiene parametros asociados al cliente ", this.parametrosRecurso.cliente.nombre)
+            this.toastr.warning("El recurso ya tiene parametros asociados al cliente " + this.parametrosRecurso.cliente.nombre)
         }
     }
 
@@ -229,6 +229,9 @@ export class ListRecursosComponent implements OnInit {
             this.parametrosRecurso = data;
             this.tarifaMesFormatter = this.formatTarifa(data.tarifaMensual.toString());
             this.tarifaHoraFormatter = this.formatTarifa(data.tarifaHora.toString());
+            this.recursos = this.recursos.filter(recurso => {
+                return !(recurso.cliente.nombre === this.parametrosRecurso.cliente.nombre && recurso.empleado.nombre === this.parametrosRecurso.empleado.nombre);
+            });
         }, error => {
             console.log(error);
         });
