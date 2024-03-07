@@ -27,11 +27,11 @@ export class ListRecursosComponent implements OnInit {
     tarifaMesFormatter: string = '';
     title: string = '';
     navName: string = '';
+    backupRecurso: ParametriaRecursosMatrizTiempo = new ParametriaRecursosMatrizTiempo();
     parametrosRecurso: ParametriaRecursosMatrizTiempo = new ParametriaRecursosMatrizTiempo();
     recursos: ParametriaRecursosMatrizTiempo[];
     empleados: Empleado[];
     empleadosList: Empleado[];
-    backupCliente: Cliente[];
     clientes: Cliente[];
     dataSource = new MatTableDataSource();
     dataSourceParametros = new MatTableDataSource();
@@ -94,7 +94,7 @@ export class ListRecursosComponent implements OnInit {
         this.dataSource.data = data;
     }
 
-    sortDataParm(sort: Sort){
+    sortDataParm(sort: Sort) {
         const data: RecursosString[] = this.dataSourceParametros.data.slice() as RecursosString[];
         if (!sort.active || sort.direction === '') {
             this.dataSourceParametros.data = data;
@@ -162,39 +162,49 @@ export class ListRecursosComponent implements OnInit {
 
         this.recursoExist = false;
 
-        this.recursos.forEach(recurso => {
-            if (recurso.cliente.nombre === this.parametrosRecurso.cliente.nombre && recurso.empleado.nombre === this.parametrosRecurso.empleado.nombre) {
-                this.recursoExist = true;
-                return;
+        if (this.editMode && this.backupRecurso.cliente !== undefined) {
+            this.recursoExist = this.checkExistingRecurso(this.recursos, this.parametrosRecurso.cliente.nombre, this.parametrosRecurso.empleado.nombre);
+            if (!this.recursoExist) {
+                this.recursos.push(this.backupRecurso);
+                this.backupRecurso = new ParametriaRecursosMatrizTiempo();
             }
-        });
+        }
 
         if (!this.recursoExist) {
-            this.parametrosRecurso.tarifaHora = parseInt(this.tarifaHoraFormatter.replace(/[^\d]/g, ''));
-            this.parametrosRecurso.tarifaMensual = parseInt(this.tarifaMesFormatter.replace(/[^\d]/g, ''));
-            if (this.editMode) {
-                this.parametriaRecursosService.saveParametriaRecursos(this.parametrosRecurso).subscribe(data => {
-                    this.toastr.success('Se agrega parametrización satisfactoriamente');
-                    this.modalAgregarPerfil.close();
-                    this.clearRecurso();
-                    this.getRecursos();
-                }, error => {
-                    this.toastr.error(error.message)
-                });
-            } else {
-                this.parametriaRecursosService.updateParametriaRecursos(this.parametrosRecurso.id, this.parametrosRecurso).subscribe(data => {
-                    this.toastr.success('Se actualizo la parametrización satisfactoriamente')
-                    this.modalAgregarPerfil.close();
-                    this.clearRecurso();
-                    this.getRecursos();
-                }, error => {
-                    this.toastr.error(error.error.message)
-                })
-            }
+            this.recursoExist = this.checkExistingRecurso(this.recursos, this.parametrosRecurso.cliente.nombre, this.parametrosRecurso.empleado.nombre);
+        }
+
+        if (!this.recursoExist) {
+            this.saveOrUpdateParametros();
         } else {
-            this.toastr.warning("El recurso ya tiene parametros asociados al cliente " + this.parametrosRecurso.cliente.nombre)
+            this.toastr.warning("El recurso ya tiene parametros asociados al cliente " + this.parametrosRecurso.cliente.nombre);
         }
     }
+
+    checkExistingRecurso(recursos, clienteNombre, empleadoNombre) {
+        return recursos.some(recurso => recurso.cliente.nombre === clienteNombre && recurso.empleado.nombre === empleadoNombre);
+    }
+
+    saveOrUpdateParametros() {
+        this.parametrosRecurso.tarifaHora = parseInt(this.tarifaHoraFormatter.replace(/[^\d]/g, ''));
+        this.parametrosRecurso.tarifaMensual = parseInt(this.tarifaMesFormatter.replace(/[^\d]/g, ''));
+
+        const request = this.editMode ?
+            this.parametriaRecursosService.saveParametriaRecursos(this.parametrosRecurso) :
+            this.parametriaRecursosService.updateParametriaRecursos(this.parametrosRecurso.id, this.parametrosRecurso);
+
+        request.subscribe(data => {
+            const message = this.editMode ? 'Se agrega parametrización satisfactoriamente' : 'Se actualiza la parametrización satisfactoriamente';
+            this.toastr.success(message);
+            this.modalAgregarPerfil.close();
+            this.clearRecurso();
+            this.getRecursos();
+        }, error => {
+            const errorMessage = this.editMode ? error.message : error.error.message;
+            this.toastr.error(errorMessage);
+        });
+    }
+
 
     clearRecurso() {
         this.parametrosRecurso = new ParametriaRecursosMatrizTiempo();
@@ -216,7 +226,11 @@ export class ListRecursosComponent implements OnInit {
 
     private getRecursos() {
         this.parametriaRecursosService.getParametriaRecursos().subscribe(data => {
-            data.sort((a, b) => (a.empleado.nombre < b.empleado.nombre ? -1 : 1));
+            data.sort((a, b) => (a.empleado.nombre < b.empleado.nombre ? -1 : 1)); data.sort((a, b) => {
+                if (a.empleado.nombre < b.empleado.nombre) return -1;
+                if (a.empleado.nombre > b.empleado.nombre) return 1;
+                return a.cliente.nombre < b.cliente.nombre ? -1 : 1;
+            }); 
             this.recursos = data;
             this.dataSourceParametros = new MatTableDataSource(this.castListRecursoToStringList(this.recursos));
         }, error => {
@@ -229,6 +243,7 @@ export class ListRecursosComponent implements OnInit {
             this.parametrosRecurso = data;
             this.tarifaMesFormatter = this.formatTarifa(data.tarifaMensual.toString());
             this.tarifaHoraFormatter = this.formatTarifa(data.tarifaHora.toString());
+            this.backupRecurso = this.parametrosRecurso;
             this.recursos = this.recursos.filter(recurso => {
                 return !(recurso.cliente.nombre === this.parametrosRecurso.cliente.nombre && recurso.empleado.nombre === this.parametrosRecurso.empleado.nombre);
             });
