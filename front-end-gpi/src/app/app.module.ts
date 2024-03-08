@@ -61,7 +61,7 @@ import { ChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { InformePsrComponent } from './views/pages/informes/informe-psr/informe-psr.component';
 import { GestionRol } from './views/pages/gestion-usuario-rol/gestion-rol/gestion-rol.component';
-
+import { ReporteSeguimiento } from './views/pages/reportes/reporte-seguimiento/reporte-seguimiento.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -100,7 +100,8 @@ registerLocaleData(localeEs, 'es');
         ReporteTiemposPendientesEmpleadosComponent,
         CrearPsrComponent,
         ListPsrComponent,
-        InformePsrComponent
+        InformePsrComponent,
+        ReporteSeguimiento
     ],
     imports: [
         BrowserModule,

@@ -201,7 +201,7 @@ export const MENU_DP: MenuItem[] = [
             {
                 label: 'Novedades',
                 link: '/proyectos/internos'
-            },   
+            },
             {
                 label: 'Project Status Report',
                 subItems: [
@@ -260,6 +260,12 @@ export const MENU_DP: MenuItem[] = [
     {
         label: 'Reportes',
         isTitle: true
+    },
+    {
+        label: 'Reportes Seguimientos',
+        icon: 'check-square',
+        link: '/reporte-seguimiento'
+
     },
     {
         label: 'Facturacion cliente',

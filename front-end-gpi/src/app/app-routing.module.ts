@@ -20,6 +20,7 @@ import { NovedadesComponent } from './views/pages/novedades/novedades.component'
 import { UpdateRecursoComponent } from './views/pages/recursos/update-recurso/update-recurso.component';
 import { DetalleAprobarTiempoComponent } from './views/pages/reporte-tiempos/detalle-aprobar-tiempo/detalle-aprobar-tiempo.component';
 import { CargaMasivaComponent } from './views/pages/reporte-tiempos/carga-masiva/carga-masiva-component';
+import { ReporteSeguimiento } from './views/pages/reportes/reporte-seguimiento/reporte-seguimiento.component';
 import { ActividadesComponent } from './views/pages/planeacion/actividades/actividades.component';
 import { FasesComponent } from './views/pages/planeacion/fases/fases.component';
 import { ReportesPendientesDevueltosComponent } from './views/pages/reporte-tiempos/reportes-pendientes-devueltos/reportes-pendientes-devueltos.component';
@@ -90,6 +91,9 @@ const routes: Routes = [
             },
             {
                 path: 'reporte-tiempo/pendientes-devueltos', component: ReportesPendientesDevueltosComponent
+            },
+            {
+                path: 'reporte-seguimiento', component: ReporteSeguimiento
             },
             {
                 path: 'reporte-tiempo/mis-reportes', component: MisReportesComponent

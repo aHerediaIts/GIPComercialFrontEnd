@@ -1,0 +1,21 @@
+<html lang="en">
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">reporte-seguimiento</a></li>
+    </ol>
+</nav>
+
+<body>
+    <div>
+        <label for="tipoReporte">Selecciona el Tipo de Reporte:</label>
+        <select id="tipoReporte" [(ngModel)]="tipoReporteSeleccionado" (change)="TipoReporteChange()">
+          <option value="tipo1">Tipo de Reporte 1</option>
+          <option value="tipo2">Tipo de Reporte 2</option>
+          <option value="tipo3">Tipo de Reporte 3</option>
+        </select>
+    </div>
+    <div>
+        <button (click)="hacerReporte()">Realizar reporte</button>
+    </div>
+</body>
+</html>
