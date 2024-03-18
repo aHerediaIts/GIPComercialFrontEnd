@@ -50,12 +50,14 @@ export class UpdateProyectoComponent implements OnInit {
     submittedT: boolean = false;
     formComponente: FormGroup;
     submittedC: boolean = false;
+    isChecked: boolean = false;
     fecha: string;
 
     modalAddTipo: NgbModalRef;
     modalDeleteTipo: NgbModalRef;
     modalAddComponente: NgbModalRef;
     modalDeleteComponente: NgbModalRef;
+    
 
     constructor(
         private proyectoService: ProyectoService,
@@ -88,6 +90,9 @@ export class UpdateProyectoComponent implements OnInit {
 
         this.proyectoService.getProyectoById(this.id).subscribe(data => {
             this.proyecto = data;
+            if (this.proyecto.rfProyecto != undefined){
+                this.isChecked = true;
+            }
             if (this.proyecto.etapa.etapa == 'PRP') {
                 this.proyecto.componente = new ComponenteDesarrollo();
                 this.proyecto.lider = new Empleado();
@@ -133,6 +138,12 @@ export class UpdateProyectoComponent implements OnInit {
     }
 
     updateProyecto() {
+
+        if(!this.isChecked){
+            this.proyecto.directorClient = " ";
+            this.proyecto.rfProyecto = " ";
+        }
+
         this.proyectoService.updateProyecto(this.id, this.proyecto, this.session['id']).subscribe(data => {
             this.toastr.success('¡Proyecto actualizado correctamente!');
             this.goToProyectList();
@@ -357,6 +368,10 @@ export class UpdateProyectoComponent implements OnInit {
             }
         }
         //return 'REG-' +  + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
+    }
+
+    validarChecked(){
+        this.isChecked = !this.isChecked;
     }
 
     closeAddTipoModal() {

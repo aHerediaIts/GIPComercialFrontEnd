@@ -51,6 +51,7 @@ export class FormProyectoComponent implements OnInit {
     formProyecto: FormGroup;
     formProyectoPRP: FormGroup;
     submittedP: boolean = false;
+    isChecked: boolean = false;
     formTipo: FormGroup;
     submittedT: boolean = false;
     formComponente: FormGroup;
@@ -330,14 +331,19 @@ export class FormProyectoComponent implements OnInit {
 
             return 'REG-' + "CRN" + "-" + this.proyecto.cliente.nomenclatura + "-" + this.proyecto.codigo;
         }
+    }
 
-
-
+    validarChecked(){
+        this.isChecked = !this.isChecked;
     }
 
     saveProyecto() {
-        console.log(this.proyecto);
-        console.log(this.proyecto.rfProyecto);
+        
+        if(!this.isChecked){
+            this.proyecto.directorClient = " ";
+            this.proyecto.rfProyecto = " ";
+        }
+
         this.proyecto.creador = this.session['nombre'];
         this.proyectoService.createProyecto(this.proyecto).subscribe(data => {
             this.toastr.success('Proyecto guardado correctamente!');
