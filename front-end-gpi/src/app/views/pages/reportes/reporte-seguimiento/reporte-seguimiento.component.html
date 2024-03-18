@@ -1,30 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Seguimiento</title>
-</head>
-<body>
-    <div class="container">
-
-        <div class="row justify-content-center">
-            <div class="col-md-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-title">Selecciona el Tipo de Reporte:</h6>
-                        <div class="form-group">
-                            <select id="tipoReporte" [(ngModel)]="tipoReporteSeleccionado" (change)="TipoReporteChange()" class="form-control">
-                                <option *ngFor="let r of listaTipoReporte" [ngValue]="r">{{ r.tipo }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button _ngcontent-ckj-c126="" class="btn btn-light" (click)="hacerReporte()">Realizar reporte</button>
-                        </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Reportes de Seguimientos</h6>
+                    <div class="form-group">
+                        <h3 class="card-title">Selecciona el Tipo de Reporte:</h3>
+                        <select id="tipoReporte" [(ngModel)]="tipoReporteSeleccionado" (change)="TipoReporteClick()" class="form-control">
+                            <option *ngFor="let tipo of listaTipoReporte" [ngValue]="tipo">{{ tipo.tipo }}</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+    <div class="row justify-content-center">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div *ngIf="tipoReporteSeleccionado.tipo === 'INACTIVOS'">
+                        <h6 class="card-title">Reporte de Proyectos Inactivos</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="table-reportes-inactivos">
+                                <!-- Estructura de la tabla para INACTIVOS -->
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">Fecha inicio</th>
+                                        <th scope="col">Fecha fin</th>
+                                        <th scope="col">Ingeniero</th>
+                                        <th scope="col">Codigo</th>
+                                        <th scope="col">Director</th>
+                                        <th scope="col">Observaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let r of listaProyecto">
+                                        <th scope="row">{{r.actividad.proyecto.estadoProyecto.estado}}</th>
+                                        <td>{{r.actividad.fechaInicio | date:'dd/MM/yyyy'}}</td>
+                                        <td>{{r.actividad.fechaFin | date:'dd/MM/yyyy'}}</td>
+                                        <td>{{r.empleado.nombre}}</td>
+                                        <td>{{r.actividad.proyecto.cliente.nomenclatura}}-{{r.actividad.proyecto.codigo}}</td>
+                                        <td>{{r.actividad.proyecto.creador}}</td>
+                                        <td>{{r.actividad.proyecto.descripcion}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div *ngIf="tipoReporteSeleccionado.tipo === 'CONTROL HORAS'">
+                        <h6 class="card-title">Reporte de Control de Horas</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="table-reportes-control-horas">
+                                <!-- Estructura de la tabla para CONTROL HORAS -->
+                            </table>
+                        </div>
+                    </div>
+                    <div *ngIf="tipoReporteSeleccionado.tipo === 'SEGUIMIENTO ANUAL'">
+                        <h6 class="card-title">Reporte de Seguimiento Anual</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="table-reportes-seguimiento-anual">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Cliente</th>
+                                        <th scope="col">Línea de Servicio</th>
+                                        <th scope="col">Nombre Proyecto</th>
+                                        <th scope="col">Descripción Cliente para Facturación</th>
+                                        <th scope="col">Código Propuesta</th>
+                                        <th scope="col">Fecha Propuesta</th>
+                                  
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let proyecto of listaProyecto">
+                                       
+                            
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div *ngIf="tipoReporteSeleccionado.tipo === 'SEGUIMIENTO INGENIEROS Y ALFA'">
+                        <h6 class="card-title">Reporte de Seguimiento Ingenieros y Alfa</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="table-reportes-seguimiento-ingenieros-alfa">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">Fecha Inicio</th>
+                                        <th scope="col">Fecha Fin</th>
+                                        <th scope="col">Ingeniero</th>
+                                        <th scope="col">RF</th>
+                                   
+                                        <th scope="col">Líder Cliente</th>
+                                        <th scope="col">Tiempo Contratado</th>
+                                        <th scope="col">Cargo</th>
+                                        <th scope="col">Tarifa mes</th>
+                                        <th scope="col">Contrato - Código cliente</th>
+                                        <th scope="col">Facturar a</th>
+                                        <th scope="col">Observaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Botón de exportar a Excel -->
+                    <div class="text-right mt-3">
+                        <button id="btnExportExcel" type="button" (click)="hacerReporte()" class="btn btn-success">
+                            Exportar a Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
