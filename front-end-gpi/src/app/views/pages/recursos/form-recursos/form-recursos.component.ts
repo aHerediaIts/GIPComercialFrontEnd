@@ -19,6 +19,10 @@ import { Rol } from 'src/app/model/rol';
 import { RolService } from 'src/app/service/rol.service';
 import { EmpleadoRol } from 'src/app/model/empleado-rol';
 import { EmpleadoRolService } from 'src/app/service/empleado-rol.service';
+import { GestionUsuariosRoles } from 'src/app/service/gestion-usuario-roles.service';
+import { RolSeg } from 'src/app/model/rol-seg';
+import { UsuarioRoles } from 'src/app/model/usuario-rol';
+import { EmpleadoRolSave } from 'src/app/model/empleado-rol-save';
 
 @Component({
     selector: 'app-form-recursos',
@@ -54,6 +58,9 @@ export class FormRecursosComponent implements OnInit {
     submittedC: boolean = false;
     rolForm: FormGroup;
     submittedR: boolean = false;
+    rolesSeg: RolSeg[] = [];
+    rolSeleccionado: RolSeg = new RolSeg();
+    empleadoRolSave: EmpleadoRolSave = new EmpleadoRolSave();
 
     constructor(private empleadoService: EmpleadoService,
         private rolService: RolService,
@@ -66,7 +73,8 @@ export class FormRecursosComponent implements OnInit {
         private toastr: ToastrService,
         private modalService: NgbModal,
         private formBuilder: FormBuilder,
-        private empRolService: EmpleadoRolService) {
+        private empRolService: EmpleadoRolService,
+        private gestionUsuariosRoles: GestionUsuariosRoles) {
 
     }
 
@@ -75,10 +83,7 @@ export class FormRecursosComponent implements OnInit {
     ngOnInit(): void {
         this.session = JSON.parse(this.session);
 
-        if (this.session['rol'] != 'ROL_ADMIN' && this.session['rol'] != 'ROL_GP' && this.session['rol'] != 'ROL_LP' && this.session['rol'] != 'ROL_DP') {
-            this.router.navigate(['/error']);
-            return;
-        }
+
 
         this.cargoService.getCargosList().subscribe(data => {
             this.cargos = data;
@@ -100,12 +105,23 @@ export class FormRecursosComponent implements OnInit {
             this.roles = data;
         }, error => console.log(error));
 
+        this.gestionUsuariosRoles.obtenerRoles().subscribe(roles => {
+            this.rolesSeg = roles;
+        }, error => console.log(error));
+
         this.empleado.cargo = new Cargo();
 
         this.buildRecursoForm();
         this.buildEspecialidadForm();
         this.buildCargoForm();
         this.buildRolForm();
+
+    }
+
+
+
+    extraerRoles() {
+
     }
 
     get rf() { return this.recursoForm.controls; }
@@ -127,7 +143,12 @@ export class FormRecursosComponent implements OnInit {
                 Validators.maxLength(50),
                 Validators.email
             ]],
+
             cargo: ['', [
+                Validators.required
+            ]],
+
+            rolSeguridad: ['', [
                 Validators.required
             ]],
             dependencia: ['', [
@@ -167,17 +188,26 @@ export class FormRecursosComponent implements OnInit {
         });
     }
 
-    validarCheked(){
+    validarCheked() {
         this.isChecked = !this.isChecked;
     }
 
     saveRecurso() {
         let _empleado;
-        this.empleadoService.createEmpleado(this.empleado).subscribe(data => {
+
+        let rolesAsignar: UsuarioRoles = new UsuarioRoles();
+        let roles: UsuarioRoles[] = []
+        let r = this.rolesSeg.filter(rol => rol.rolId === this.rolSeleccionado.rolId);
+        rolesAsignar.rol = r[0];
+        roles.push(rolesAsignar)
+
+        this.empleadoRolSave.usuarioRoles = roles;
+        this.empleadoRolSave.usuarioRoles[0].rol.submenuRoles = [];
+        this.empleadoRolSave.empleado = this.empleado;
+
+
+        this.empleadoService.createEmpleado(this.empleadoRolSave).subscribe(data => {
             this.toastr.success('Recurso guardado correctamente!');
-            console.log(this.empleado);
-            console.log(data);
-            console.log(this.empleado.scotiaID);
             this.selectedEspecialidades.forEach(e => {
                 let empleadoEspecialidad = new EmpleadoEspecialidad();
                 _empleado = data;
@@ -193,7 +223,7 @@ export class FormRecursosComponent implements OnInit {
                 });
             });
 
-            this.selectedRoles.forEach(r => {
+            /*this.selectedRoles.forEach(r => {
                 let empleadoRol = new EmpleadoRol();
                 _empleado = data;
                 empleadoRol.empleado = _empleado;
@@ -219,7 +249,7 @@ export class FormRecursosComponent implements OnInit {
 
                     console.log(error);
                 });
-            })
+            })*/
 
             this.goToRecursoList();
         }, error => {
@@ -309,7 +339,15 @@ export class FormRecursosComponent implements OnInit {
         });
     }
 
+
+    verValor() {
+        console.log("ROL SELECCIONADO");
+        console.log(this.rolSeleccionado);
+    }
+
+
     onSubmit() {
+
         this.submitted = true;
 
         if (this.recursoForm.invalid) {
@@ -319,12 +357,13 @@ export class FormRecursosComponent implements OnInit {
         if (this.selectedEspecialidades.length == 0 && this.empleado.cargo.id != 10) {
             return this.toastr.error('Debe agregar al menos una especialidad al empleado');
         }
-
-        if (this.selectedRoles.length == 0 && this.empleado.cargo.id != 10) {
-            return this.toastr.error('Debe agregar al menos un rol al empleado');
-        }
-
+        /*
+                if (this.selectedRoles.length == 0 && this.empleado.cargo.id != 10) {
+                    return this.toastr.error('Debe agregar al menos un rol al empleado');
+                }
+        */
         this.showSpinner();
+
         this.saveRecurso();
     }
 

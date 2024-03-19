@@ -52,37 +52,6 @@
               </table>
           </div>
       </div>
-
-
-
-
-
-        <!-- 
-          <div class="row">
-            <div class="col-4">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <i class="feather icon-search"></i>
-                  </div>
-                </div>
-                <input type="text" [(ngModel)]="parametroBuscar" class="form-control" id="buscadorUsuario"
-                  name="parametroUsuarioBuscar" placeholder="Buscar..." (keyup)="buscarRol()">
-              </div>
-            </div>
-          </div>
-
-
-          <div class="table-responsive">
-  
-  
-            <ngx-datatable class="bootstrap" [rows]="roles" [loadingIndicator]="loadingIndicator"
-              [columnMode]="columnMode.force" [footerHeight]="50" [limit]="nroPaginas" rowHeight="auto">
-              <ngx-datatable-column name="Nombre" prop="rolNombre"></ngx-datatable-column>
-              <ngx-datatable-column name="Descripción" prop="rolDescripcion"></ngx-datatable-column>
-              <ngx-datatable-column name="Permisos" [cellTemplate]="editarRolBtnTemplate"></ngx-datatable-column>
-            </ngx-datatable>
-          </div>-->
         </div>
       </div>
     </div>
@@ -147,7 +116,7 @@
                     <div class="form-group">
                       <div class="form-check">
                         <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input" [(ngModel)]="submenu.seleccionado"
+                          <input [disabled]="submenu.id == 5" type="checkbox" class="form-check-input" [(ngModel)]="submenu.seleccionado"
                             name="submenu_{{submenu.id}}`" (change)="cambiarEstados(submenu)">
                           <i class="input-frame"></i>
                           <label class="control-label"><i [attr.data-feather]="submenu.icon" appFeatherIcon></i>
@@ -183,9 +152,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Cerrar</button>
-    <!--  <button [disabled]="!formularioRegistroRol.form.valid" type="button" class="btn btn-primary"
-        (click)="registrarRol()">Guardar</button>-->
-      <button type="button" class="btn btn-primary"
+      <button [disabled]="!formularioRegistroRol.form.valid" type="button" class="btn btn-primary"
         (click)="registrarRol()">Guardar</button>
     </div>
   </ng-template>

@@ -52,7 +52,6 @@ export class LoginComponent implements OnInit {
                     let dateNow: Date = new Date();
                     let reportesVencidos: ReporteTiempo[] = [];
                     data.forEach(reporte => {
-                        console.log(reporte);
                         reporte.fecha = new Date(reporte.fecha);
                         if (reporte.fecha.getTime() < dateNow.getTime()) {
                             reportesVencidos.push(reporte);

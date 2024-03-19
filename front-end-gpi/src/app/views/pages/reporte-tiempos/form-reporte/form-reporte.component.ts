@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActividadAsignada } from 'src/app/Model/actividad-asignada';
 import { Proyecto } from 'src/app/Model/proyecto';
 import { finalize } from 'rxjs/operators';
+import { Console } from 'console';
 
 @Component({
     selector: 'app-form-reporte',
@@ -35,6 +36,13 @@ export class FormReporteComponent implements OnInit {
     mesAnioActual: string;
     mesesEnLetras = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio","Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+    horas: number[] = Array.from({length: 24}, (_, i) => i + 1); 
+    segundaLista: number[] = [];
+    horaInicio: string; 
+    horaFin: string; 
+
+
+    
     constructor(private proyectoService: ProyectoService,
         private reporteService: ReporteTiempoService,
         private actividadService: ActividadAsignadaService,
@@ -58,6 +66,17 @@ export class FormReporteComponent implements OnInit {
         this.hideFormReporte();
     }
 
+
+    
+    actualizarHorasFin() {
+
+          const selectedHourIndex = this.horas.indexOf(parseInt(this.horaInicio));
+          this.segundaLista = this.horas.slice(selectedHourIndex + 1);
+          this.horaFin = null;
+
+      }
+
+
     get fp() { return this.formProyecto.controls; }
 
     buildFormProyecto() {
@@ -78,10 +97,17 @@ export class FormReporteComponent implements OnInit {
             fecha: ['', [
                 Validators.required
             ]],
+            horaInicio: ['', [
+                Validators.required
+            ]],
+            horaFin: ['', [
+                Validators.required
+            ]],
+            /*
             horas: ['', [
                 Validators.required,
                 Validators.pattern('[0-99]{1,2}')
-            ]]
+            ]]*/
         });
     }
 

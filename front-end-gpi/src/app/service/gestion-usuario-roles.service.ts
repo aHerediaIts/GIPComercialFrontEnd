@@ -47,9 +47,4 @@ export class GestionUsuariosRoles{
         return this.httpClient.get<Usuario[]>(`${this.baseUrl}/listarUsuarios`,{ headers: this.header })
       }
 
-
-      listarInstructores(): Observable<Usuario[]> {
-        return this.httpClient.get<Usuario[]>(`${this.baseUrl}/listarInstructores`,{ headers: this.header })
-      }
-
 }

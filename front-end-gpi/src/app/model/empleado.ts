@@ -4,6 +4,7 @@ import { Cargo } from './cargo';
 import { EstadoEmpleado } from './estado-empleado';
 import { EmpleadoEspecialidad } from './empleado-especialidad';
 import { Rol } from './rol';
+import { RolSeg } from './rol-seg';
 
 
 export class Empleado{
@@ -18,5 +19,6 @@ export class Empleado{
     estado: EstadoEmpleado;
     especialidad: EmpleadoEspecialidad;
     rol: Rol;
+    rolSeg: RolSeg;
     
 }

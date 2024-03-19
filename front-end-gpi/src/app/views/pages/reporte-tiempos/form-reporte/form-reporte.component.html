@@ -47,7 +47,7 @@
                 </form>
                 <form [formGroup]="formReporte" (ngSubmit)="saveReporte()" id="formReporte">
                     <div class="form-row">
-                        <div class="form-group col-sm-12 col-md-6">
+                        <div class="form-group col-sm-12 col-md-5">
                             <label for="actividad">Actividad</label>
                             <select [(ngModel)]="reporte.actividad"
                                 [ngClass]="{'is-invalid': submittedR && fr.actividad.errors}" name="actividad"
@@ -76,6 +76,39 @@
                             </div>
                         </div>
 
+                        <div class="form-group col-sm-12 col-md-2">
+                            <label for="fecha">Hora Inicio</label>
+                            <select [(ngModel)]="horaInicio" class="form-control"
+                                [ngClass]="{'is-invalid': submittedR && fr.horaInicio.errors}" name="horaInicio"
+                                id="horaInicio" formControlName="horaInicio" (change)="actualizarHorasFin()">
+                                <option *ngFor="let hora of horas" [value]="hora">{{hora}}:00</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="submittedR && fr.horaInicio.errors">
+                                <div *ngIf="fr.horaInicio.errors.required">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-2">
+                            <label for="fecha">Hora Fin</label>
+                            <select [(ngModel)]="horaFin" class="form-control"
+                                [ngClass]="{'is-invalid': submittedR && fr.horaFin.errors}" name="horaFin" id="horaFin"
+                                formControlName="horaFin">
+                                <option *ngFor="let hora of segundaLista" [value]="hora">{{hora}}:00</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="submittedR && fr.horaFin.errors">
+                                <div *ngIf="fr.horaFin.errors.required">
+                                    Este campo es requerido.
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!--
                         <div class="form-group col-sm-12 col-md-3">
                             <label for="horas">Horas</label>
                             <input [(ngModel)]="reporte.horas" [ngClass]="{'is-invalid': submittedR && fr.horas.errors}"
@@ -94,7 +127,7 @@
                                     No se aceptan letras y caracteres especiales.
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                     </div>
                     <button [disabled]="!formReporte.valid" type="submit" id="btnGuardar"

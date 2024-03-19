@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Empleado } from '../model/empleado';
 import { HttpHeaderApp } from './header';
+import { EmpleadoRol } from '../model/empleado-rol';
+import { EmpleadoRolSave } from '../model/empleado-rol-save';
 
 @Injectable({
   providedIn: 'root'
@@ -20,15 +22,19 @@ export class EmpleadoService{
         return this.httpClient.get<any[]>(`${this.baseUrl}`, { headers: this.header});
     }
 
-    createEmpleado(empleado: Empleado): Observable<Object>{
-        return this.httpClient.post(`${this.baseUrl}`, empleado, { headers: this.header});
+    createEmpleado(empleadoRol: EmpleadoRolSave): Observable<Object>{
+        return this.httpClient.post(`${this.baseUrl}`, empleadoRol, { headers: this.header});
     }
 
     getEmpleadoById(id: number): Observable<Empleado> {
         return this.httpClient.get<Empleado>(`${this.baseUrl}/${id}`, { headers: this.header});
     }
 
-    updateEmpleado(id: number, empleado: Empleado): Observable<Object> {
+    getEmpleadoRolById(id: number): Observable<EmpleadoRolSave> {
+        return this.httpClient.get<EmpleadoRolSave>(`${this.baseUrl}/empleadoRol/${id}`, { headers: this.header});
+    }
+
+    updateEmpleado(id: number, empleado: EmpleadoRolSave): Observable<Object> {
         return this.httpClient.put(`${this.baseUrl}/${id}`, empleado, { headers: this.header});
     }
     

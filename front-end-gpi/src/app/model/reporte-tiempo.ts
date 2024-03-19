@@ -15,6 +15,8 @@ export class ReporteTiempo{
     proyecto: Proyecto;
     empleado: Empleado;
     actividad: ActividadAsignada;
+    rangoHoraDesde: number;
+    rangoHoraHasta: number;
     asignador: string;
     checked:boolean;
 }

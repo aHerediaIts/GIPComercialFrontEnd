@@ -54,6 +54,9 @@
                                 <th scope="col">Actividad</th>
                                 <th scope="col">Recurso</th>
                                 <th scope="col">Horas</th>
+                                <th scope="col">Scotia Id</th>
+                                <th scope="col">Director designado</th>
+                                <th scope="col">RF proyecto</th>
                                 <th scope="col">Asignado por</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col">Opciones</th>
@@ -74,6 +77,11 @@
                                 <td class="w-50 text-wrap">{{ r.actividad.actividad.actividad }}</td>
                                 <td class="w-50 text-wrap">{{ r.empleado.nombre }}</td>
                                 <td>{{ r.horas }}</td>
+
+                                <td class="w-50 text-wrap">{{ r.empleado.scotiaID }}</td>
+                                <td class="w-50 text-wrap">{{ r.proyecto.directorClient }}</td>
+                                <td>{{ r.proyecto.rfProyecto }}</td>
+
                                 <td class="w-50 text-wrap">{{ r.asignador }}</td>
                                 <td>
                                     <span class="badge" [ngClass]="{

@@ -23,6 +23,10 @@ import { Rol } from 'src/app/model/rol';
 import { RolService } from 'src/app/service/rol.service';
 import { EmpleadoRolService } from 'src/app/service/empleado-rol.service';
 import { EmpleadoRol } from 'src/app/model/empleado-rol';
+import { RolSeg } from 'src/app/model/rol-seg';
+import { GestionUsuariosRoles } from 'src/app/service/gestion-usuario-roles.service';
+import { EmpleadoRolSave } from 'src/app/model/empleado-rol-save';
+import { UsuarioRoles } from 'src/app/model/usuario-rol';
 
 @Component({
     selector: 'app-update-recurso',
@@ -63,6 +67,12 @@ export class UpdateRecursoComponent implements OnInit {
     submittedR: boolean = false;
     novedadForm: FormGroup;
     submittedN: boolean = false;
+    rolesSeg:RolSeg[] = [];
+    rolSeleccionado:RolSeg = new RolSeg();
+    rolSeleccionadoId:number;
+    usuarioRolSeleccionado:number;
+    empleadoRolSave :EmpleadoRolSave = new EmpleadoRolSave();
+
 
     constructor(private route: ActivatedRoute,
         private empleadoService: EmpleadoService,
@@ -78,7 +88,8 @@ export class UpdateRecursoComponent implements OnInit {
         private especialidadService: EspecialidadService,
         private especialidadEmpService: EmpleadoEspecialidadService,
         private formBuilder: FormBuilder,
-        private empRolService: EmpleadoRolService) {
+        private empRolService: EmpleadoRolService,
+        private gestionUsuariosRoles: GestionUsuariosRoles) {
     }
 
     session = localStorage.getItem('session');
@@ -86,16 +97,13 @@ export class UpdateRecursoComponent implements OnInit {
     ngOnInit(): void {
         this.session = JSON.parse(this.session);
 
-        if (this.session['rol'] != 'ROL_ADMIN' && this.session['rol'] != 'ROL_GP' && this.session['rol'] != 'ROL_LP' && this.session['rol'] != 'ROL_DP') {
-            this.router.navigate(['/error']);
-            return;
-        }
-
         this.id = this.route.snapshot.params['id'];
 
-        this.empleadoService.getEmpleadoById(this.id).subscribe(data => {
-            this.empleado = data;
-            console.log(this.empleado);
+        this.empleadoService.getEmpleadoRolById(this.id).subscribe(data => {
+            this.empleado = data.empleado;
+            this.rolSeleccionadoId= data.idRol;
+            this.usuarioRolSeleccionado = data.usuarioRolId;
+
             if(this.empleado.scotiaID == null){
                 this.isCheckedlabel = !this.isCheckedlabel;
             }else{
@@ -133,6 +141,12 @@ export class UpdateRecursoComponent implements OnInit {
             this.causa = data;
         }, error => console.log(error));
 
+        
+        this.gestionUsuariosRoles.obtenerRoles().subscribe(roles => {
+            this.rolesSeg = roles;
+            this.rolSeleccionado = this.rolesSeg.find(rol => rol.rolId === this.rolSeleccionadoId);
+        }, error => console.log(error));
+
         this.buildRecursoForm();
         this.buildEspecialidadForm();
         this.buildCargoForm();
@@ -155,6 +169,9 @@ export class UpdateRecursoComponent implements OnInit {
                 Validators.minLength(5),
                 Validators.maxLength(50),
                 Validators.email
+            ]],
+            rolSeguridad: ['', [
+                Validators.required
             ]],
             scotiaId: ['', [
                 Validators.pattern(/[a-zA-Z0-9]+/)
@@ -224,18 +241,29 @@ export class UpdateRecursoComponent implements OnInit {
         if (this.validIfHasEspecialidades(this.empleado)) {
             return this.toastr.error('Debe agregar al menos una especialidad.');
         }
-
+/*
         if (this.addedRoles.length == 0) {
             return this.toastr.error('El empleado debe tener al menos un rol');
         }
-
+*/
         if (this.recursoForm.invalid) {
             return;
         }
 
+        let rolesAsignar: UsuarioRoles = new UsuarioRoles();
+        let roles: UsuarioRoles[] = []
+        let r = this.rolesSeg.filter(rol => rol.rolId === this.rolSeleccionado.rolId);
+        rolesAsignar.rol = r[0];
+        roles.push(rolesAsignar)
+        rolesAsignar.usuarioRolId=this.usuarioRolSeleccionado;
+
+
+        this.empleadoRolSave.usuarioRoles = roles;
+        this.empleadoRolSave.usuarioRoles[0].rol.submenuRoles = [];
+        this.empleadoRolSave.empleado = this.empleado;
 
         this.showSpinner();
-        this.empleadoService.updateEmpleado(this.id, this.empleado).subscribe(data => {
+        this.empleadoService.updateEmpleado(this.id, this.empleadoRolSave).subscribe(data => {
             this.toastr.info('Recurso actualizado correctamente.');
             this.goToRecursosList();
         }, error => {

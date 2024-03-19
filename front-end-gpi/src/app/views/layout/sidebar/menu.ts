@@ -141,19 +141,19 @@ export const MENU_ADMIN: MenuItem[] = [
 
 
 export const MENU_DP: MenuItem[] = [
-    {
+  /*  {
         label: 'Principal',
         isTitle: true
-    },
+    },*/
     {
         label: 'Inicio',
         icon: 'home',
         link: '/dashboard'
     },
-    {
+   /* {
         label: 'Administracion',
         isTitle: true
-    },
+    },*/
     {
         label: 'Clientes',
         icon: 'users',
@@ -186,7 +186,7 @@ export const MENU_DP: MenuItem[] = [
             }
         ]
     },
-    {
+  /*  {
         label: 'Proyectos',
         icon: 'briefcase',
         subItems: [
@@ -216,7 +216,7 @@ export const MENU_DP: MenuItem[] = [
                 ]
             }
         ]
-    },
+    },*/
     {
         label: 'Gestión Usuario Roles',
         icon: 'compass',
@@ -226,7 +226,7 @@ export const MENU_DP: MenuItem[] = [
                 link: '/gestion-rol'
             }
         ]
-    },
+    }/*,
     {
         label: 'Reporte tiempos',
         icon: 'compass',
@@ -291,7 +291,7 @@ export const MENU_DP: MenuItem[] = [
         label: 'Empleados sin reportes',
         icon: 'check-square',
         link: '/reportes/reporte-tiempos/reportes-pendientes-empleado'
-    }
+    }*/
 ];
 
 
