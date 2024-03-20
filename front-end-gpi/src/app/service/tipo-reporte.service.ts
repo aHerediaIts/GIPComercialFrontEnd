@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { TipoReporte } from '../model/tipo-reporte';
 import { HttpHeaderApp } from './header';
 import { RecursoActividad } from '../model/recurso-actividad';
+import { Proyecto } from '../Model/proyecto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,12 @@ export class TipoReporteService {
         return this.httpClient.get<TipoReporte[]>(`${this.baseUrl}/tipos`, { headers: this.header});
     }
 
-    getAllProyectoStatusReport(): Observable<RecursoActividad[]> {
-      return this.httpClient.get<RecursoActividad[]>(`${this.baseUrl}/reporte`, { headers: this.header});
+    getAllRecursoActividad(): Observable<RecursoActividad[]> {
+      return this.httpClient.get<RecursoActividad[]>(`${this.baseUrl}/reporte/inactivos`, { headers: this.header});
+    }
+
+    getProyectosRf(): Observable<Proyecto[]> {
+      return this.httpClient.get<Proyecto[]>(`${this.baseUrl}/proyectos`, { headers: this.header});
     }
     
 }

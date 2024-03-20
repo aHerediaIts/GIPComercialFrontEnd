@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { TipoReporteService } from "src/app/service/tipo-reporte.service";
 import { TipoReporte } from "src/app/model/tipo-reporte";
 import { RecursoActividad } from "src/app/model/recurso-actividad";
+import { Proyecto } from "src/app/Model/proyecto";
+import { ProyectoService } from "src/app/service/proyecto.service";
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -14,14 +16,25 @@ export class ReporteSeguimiento implements OnInit{
     tipoReporteSeleccionado: TipoReporte;
     listaTipoReporte: TipoReporte[];
     listaProyecto: RecursoActividad[];
+    Proyectos: Proyecto[];
+    rfProyecto: Proyecto;
+    rfSeleccionado: Proyecto;
 
     constructor(
         private router: Router,
-        private tipoReporteService: TipoReporteService
+        private tipoReporteService: TipoReporteService,
+        private listProyecto: ProyectoService
     ){}
 
     ngOnInit(): void {
         this.getTipoReporte();
+        this.getListProyecto();
+    }
+
+    getListProyecto(){
+        this.tipoReporteService.getProyectosRf().subscribe(data => {
+            this.Proyectos = data;
+        })
     }
 
     getTipoReporte(){
@@ -41,7 +54,7 @@ export class ReporteSeguimiento implements OnInit{
         // Dependiendo del tipo de reporte seleccionado, se realiza una acción específica
         switch(this.tipoReporteSeleccionado.tipo) {
             case 'INACTIVOS':
-                this.tipoReporteService.getAllProyectoStatusReport().subscribe(data => {
+                this.tipoReporteService.getAllRecursoActividad().subscribe(data => {
                     this.listaProyecto = data;
                 });
                 break;

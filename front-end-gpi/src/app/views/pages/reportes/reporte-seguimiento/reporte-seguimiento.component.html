@@ -4,15 +4,31 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Reportes de Seguimientos</h6>
+                    <div class="form-group row">
+                        <div class="form-group col-3">
+                            <label for="fechaInicio">Fecha Inicio</label>
+                            <input type="date" id="fechaInicio" class="form-control" name="fechaInicio" formControlName="fechaInicio">
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="fechaFin">Fecha Fin</label>
+                            <input type="date" id="fechaFin" class="form-control" name="fechaFin" formControlName="fechaFin">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <h3 class="card-title">Selecciona el Tipo de Reporte:</h3>
                         <select id="tipoReporte" [(ngModel)]="tipoReporteSeleccionado" (change)="TipoReporteClick()" class="form-control">
                             <option *ngFor="let tipo of listaTipoReporte" [ngValue]="tipo">{{ tipo.tipo }}</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <h3 class="card-title">Selecciona el RF:</h3>
+                        <select id="rf" [(ngModel)]="rfSeleccionado" class="form-control">
+                            <option *ngFor="let rf of Proyectos" [ngValue]="rf">{{ rf.rfProyecto }}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div>        
     </div>
     <div class="row justify-content-center">
         <div class="col-md-12 grid-margin stretch-card">
