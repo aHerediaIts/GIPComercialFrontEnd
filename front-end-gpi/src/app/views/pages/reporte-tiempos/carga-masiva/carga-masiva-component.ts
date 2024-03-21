@@ -149,6 +149,7 @@ export class CargaMasivaComponent implements OnInit {
 
   resetFile(){
     this.file = undefined;
+    this.camposCorrectos = false;
     const fileInput = document.getElementById('archivo') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
