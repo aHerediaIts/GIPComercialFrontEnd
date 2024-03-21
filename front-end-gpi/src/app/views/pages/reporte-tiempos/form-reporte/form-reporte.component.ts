@@ -112,11 +112,9 @@ export class FormReporteComponent implements OnInit {
     }
 
     getTiemposReportados() {
-        console.log("ENTRA A EXTRAER TIEMPOS REPORTADOS");
         this.reporteService.findByMesActualAndEmpleado(this.idEmpleado).subscribe(data => {
             data.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
             this.tiemposReportados = data;
-            console.log(data);
         }, error => {
             console.log(error);
         });
@@ -187,7 +185,6 @@ export class FormReporteComponent implements OnInit {
             if (this.proyecto.interno) {
                 this.reporteService.enviarProyectoInt(this.reporte).pipe(finalize(() => this.getTiemposReportados())
                 ).subscribe(data => {
-                    console.log(this.reporte);
                     this.toastr.success('Reporte enviado correctamente!');
                     this.hideSpinner();
                     this.cancelReporte();
@@ -200,7 +197,6 @@ export class FormReporteComponent implements OnInit {
             } else {
                 this.reporteService.enviar(this.reporte).pipe(finalize(() => this.getTiemposReportados())
                 ).subscribe(data => {
-                    console.log(this.reporte);
                     this.toastr.success('Reporte enviado correctamente!');
                     this.hideSpinner();
                     this.cancelReporte();

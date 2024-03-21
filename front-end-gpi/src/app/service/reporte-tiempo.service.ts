@@ -56,6 +56,12 @@ export class ReporteTiempoService {
         });
     }
 
+    cargaMasiva(reportes: ReporteTiempo[]): Observable<Object> {
+        return this.httpClient.post(`${this.baseUrl}/carga-masiva`, reportes, {
+            headers: this.header,
+        });
+    }
+
     aprobar(id: number, fechaA: Date, aprobador: number): Observable<Object> {
         return this.httpClient.put(
             `${this.baseUrl}/aprobar/${id}/${fechaA}/${aprobador}`,

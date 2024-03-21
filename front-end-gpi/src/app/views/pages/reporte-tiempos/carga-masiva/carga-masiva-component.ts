@@ -1,21 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { forkJoin, throwError  } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { ReporteTiempo } from 'src/app/model/reporte-tiempo';
 import { ReporteTiempoService } from 'src/app/service/reporte-tiempo.service';
-import { Cliente } from 'src/app/model/cliente';
-import { ClienteService } from 'src/app/service/cliente.service';
 import { EmpleadoService } from 'src/app/service/empleado.service';
 import { ActividadService } from 'src/app/service/actividad.service';
 import { ActividadAsignada } from 'src/app/model/actividad-asignada';
 import { ProyectoService } from 'src/app/service/proyecto.service';
-import { Proyecto } from 'src/app/Model/proyecto';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmpleadoString } from 'src/app/model/dto/empleado-string';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Actividad } from 'src/app/model/actividad';
-import { EstadoReporteTiempo } from 'src/app/model/estado-reporte-tiempo';
+import { EstadoActividadAsig } from 'src/app/model/estado-actividad-asig';
+import { EstadoActividadAsigService } from 'src/app/service/estado-actividad-asig.service';
 
 @Component({
   selector: 'app-carga-masiva',
@@ -26,6 +25,8 @@ import { EstadoReporteTiempo } from 'src/app/model/estado-reporte-tiempo';
 export class CargaMasivaComponent implements OnInit {
 
   reporte: any;
+  camposCorrectos: boolean = false;
+  estado: EstadoActividadAsig = new EstadoActividadAsig();
   reporteTemp: ReporteTiempo = new ReporteTiempo();
   listReportes: ReporteTiempo[] = [];
   file: File;
@@ -33,16 +34,16 @@ export class CargaMasivaComponent implements OnInit {
   dataSource = new MatTableDataSource();
 
   constructor(
+    private estadoActividadAsignadaService: EstadoActividadAsigService,
     private reporteTiempoService: ReporteTiempoService,
     private empleadoService: EmpleadoService,
     private actividadService: ActividadService,
-    private clienteService: ClienteService,
     private proyectoService: ProyectoService,
     private formBuilder: FormBuilder,
     private router: Router,
     private toastr: ToastrService) { }
 
-  columnas: string[] = ['Cliente', 'Proyecto', 'Actividad', 'NombresRecurso', 'FechaReporte', 'Horas'];
+  columnas: string[] = ['Cliente', 'Proyecto', 'Actividad', 'NombresRecurso', 'Justificacion', 'FechaReporte', 'Horas'];
   session = localStorage.getItem('session');
   sessionObject: EmpleadoString = new EmpleadoString();
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -55,8 +56,14 @@ export class CargaMasivaComponent implements OnInit {
       this.router.navigate(['/error']);
     }
     this.buildFormCliente();
+    this.estadosReportes();
   }
 
+  estadosReportes() {
+    this.estadoActividadAsignadaService.getEstadoById(1).subscribe(data => {
+      this.estado = data;
+    });
+  }
   get fp() { return this.formCliente.controls; }
 
   buildFormCliente() {
@@ -66,67 +73,85 @@ export class CargaMasivaComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.file);
-
     if (this.formCliente.invalid || this.file === undefined) {
       this.formCliente.markAllAsTouched();
       return;
     }
 
-
     this.listReportes.length = 0;
 
-    this.reporte.forEach(obj => {
-      this.reporteTemp.actividad = new ActividadAsignada();
-      this.reporteTemp.estado = new EstadoReporteTiempo();
-      this.actividadService.getActividadByActividad(obj.Actividad).subscribe(data => {
-        this.reporteTemp.actividad.actividad = data;
-      })
+    const observables = this.reporte.map((obj, index) => {  
+      return forkJoin([
+        this.actividadService.getActividadByActividad(obj.Actividad).pipe(
+          catchError(error => {
+            this.toastr.error(`Error al obtener la actividad de la celda número ${index + 2}: ${error.error.message}`);
+            return throwError(error);
+          })
+        ),
+        this.proyectoService.getProyectoByName(obj.Proyecto).pipe(
+          catchError(error => {
+            this.toastr.error(`Error al obtener el proyecto de la celda número ${index + 2}: ${error.error.message}`);
+            return throwError(error);
+          })
+        ),
+        this.empleadoService.getEmpleadoByNombre(obj.NombreRecurso).pipe(
+          catchError(error => {
+            this.toastr.error(`Error al obtener el empleado de la celda número ${index + 2}: ${error.error.message}`);
+            return throwError(error);
+          })
+        )
+      ]).pipe(
+        tap(([actividad, proyecto, empleado]) => {
+          this.reporteTemp = new ReporteTiempo();
+          this.reporteTemp.actividad = new ActividadAsignada();
+          this.reporteTemp.actividad.estado = this.estado;
 
-      this.reporteTemp.fecha = obj.FechaReporte;
-      this.reporteTemp.horas = obj.Horas;
+          this.reporteTemp.actividad.actividad = actividad;
+          this.reporteTemp.fecha = obj.FechaReporte;
+          this.reporteTemp.horas = obj.Horas;
+          this.reporteTemp.justificacion = obj.Justificacion;
+          this.reporteTemp.proyecto = proyecto;
+          this.reporteTemp.actividad.proyecto = proyecto;
+          this.reporteTemp.empleado = empleado;
+          this.listReportes.push(this.reporteTemp);
+        })
+      );
+    });
 
-
-      this.proyectoService.getProyectoByName(obj.Proyecto).subscribe(data => {
-        this.reporteTemp.proyecto = data;
-        this.reporteTemp.actividad.proyecto = data;
-        this.reporteTemp.estado.id = 1;
-        this.empleadoService.getEmpleadoByNombre(obj.NombreRecurso).subscribe(data => {
-          this.reporteTemp.empleado = data;
+    forkJoin(observables).subscribe(() => {
+      if (this.reporte.length === this.listReportes.length) {
+        this.reporteTiempoService.cargaMasiva(this.listReportes).subscribe(data => {
+          this.toastr.success('Reporte enviado correctamente!');
         }, error => {
-          console.log(error.error.message);
+          this.toastr.error(error.error.message);
         });
-      }, error => {
-        console.log(error.error.message);
-      });
-
-      this.listReportes.push(this.reporteTemp);
-      this.reporteTiempoService.enviarProyectoInt(this.reporteTemp).subscribe(data => {
-        console.log(this.reporte);
-        this.toastr.success('Reporte enviado correctamente!');
-      }, error => {
-        this.toastr.error(error.error);
-      });
-    })
-
-    console.log(this.listReportes);
-
-
-    // window.location.reload();
+      }
+    });
   }
 
   onFileSelected(event: any) {
     this.file = event.target.files[0];
+    this.camposCorrectos = false;
+
     if (this.file) {
       this.proyectoService.createCargaMasiva(this.file).subscribe(data => {
         this.reporte = data;
+        this.camposCorrectos = true;
         this.dataSource = new MatTableDataSource(this.castListObjectToStringList(this.reporte));
         this.dataSource.paginator = this.paginator;
-        console.log(this.reporte);
       }, error => {
         console.log(error);
-        this.toastr.error("El archivo no cuenta con los campos deseados.");
+        this.toastr.error(error.error);
+        this.resetFile();
       })
+    }
+  }
+
+  resetFile(){
+    this.file = undefined;
+    const fileInput = document.getElementById('archivo') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
     }
   }
 
@@ -140,6 +165,7 @@ export class CargaMasivaComponent implements OnInit {
       string.FechaReporte = obj.FechaReporte;
       string.Horas = obj.Horas;
       string.Proyecto = obj.Proyecto;
+      string.Justificacion = obj.Justificacion;
       string.NombreRecurso = obj.NombreRecurso;
       listString.push(string);
     });
@@ -153,6 +179,7 @@ export class ReporteList {
   Proyecto: string;
   Actividad: string;
   NombreRecurso: string;
+  Justificacion: string;
   FechaReporte: Date;
   Horas: number;
 }

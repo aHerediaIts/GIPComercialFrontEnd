@@ -20,14 +20,14 @@
                     <div class="form-row">
                         <div class="form-group col-10">
                             <label for="archivo"></label>
-                            <input type="file" id="archivo" (change)="onFileSelected($event)" class="form-control-file"
+                            <input type="file" id="archivo" (click)="resetFile()" (change)="onFileSelected($event)" class="form-control-file"
                                 [ngClass]="{'is-invalid': file === undefined}" accept=".xlsx, .xls">
                             <div class="invalid-feedback" *ngIf="file === undefined">
                                 Debes seleccionar un archivo.
                             </div>
                         </div>
                         <div class="form-group col-2">
-                            <button type="submit" id="btnSelectProyecto" class="btn btn-light">Realizar Cargue
+                            <button [disabled]="!camposCorrectos" type="submit" id="btnSelectProyecto" class="btn btn-light">Realizar Cargue
                                 Masivo</button>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<div *ngIf="file" class="row justify-content-center" id="occ">
+<div *ngIf="file && camposCorrectos" class="row justify-content-center" id="occ">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -66,6 +66,11 @@
                         <ng-container matColumnDef="NombresRecurso">
                             <th mat-header-cell *matHeaderCellDef> Nombre recurso </th>
                             <td mat-cell *matCellDef="let proyecto"> {{proyecto.NombreRecurso}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Justificacion">
+                            <th mat-header-cell *matHeaderCellDef> Justificacion </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.Justificacion}} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="FechaReporte">
