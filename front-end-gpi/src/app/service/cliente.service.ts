@@ -29,6 +29,10 @@ export class ClienteService {
     return this.httpClient.get<Cliente>(`${this.baseUrl}/${id}`, { headers: this.header});
   }
 
+  getClienteByName(nombre: string): Observable<Cliente> {
+    return this.httpClient.get<Cliente>(`${this.baseUrl}/carga-masiva/${nombre}`, { headers: this.header});
+  }
+
   updateCliente(id: number, cliente: Cliente): Observable<Object> {
     return this.httpClient.put(`${this.baseUrl}/${id}`, cliente, { headers: this.header});
   }

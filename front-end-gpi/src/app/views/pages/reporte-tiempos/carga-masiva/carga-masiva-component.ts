@@ -1,13 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { ReporteTiempo } from 'src/app/model/reporte-tiempo';
+import { ReporteTiempoService } from 'src/app/service/reporte-tiempo.service';
 import { Cliente } from 'src/app/model/cliente';
 import { ClienteService } from 'src/app/service/cliente.service';
+import { EmpleadoService } from 'src/app/service/empleado.service';
+import { ActividadService } from 'src/app/service/actividad.service';
+import { ActividadAsignada } from 'src/app/model/actividad-asignada';
 import { ProyectoService } from 'src/app/service/proyecto.service';
 import { Proyecto } from 'src/app/Model/proyecto';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmpleadoString } from 'src/app/model/dto/empleado-string';
-import { error } from 'console';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { Actividad } from 'src/app/model/actividad';
+import { EstadoReporteTiempo } from 'src/app/model/estado-reporte-tiempo';
 
 @Component({
   selector: 'app-carga-masiva',
@@ -17,24 +25,27 @@ import { error } from 'console';
 
 export class CargaMasivaComponent implements OnInit {
 
-  clientes: Cliente[] = [];
-  proyectos: Proyecto[] = [];
-  proyectosFiltrados: Proyecto[] = [];
-  cliente: Cliente;
-  proyecto: Proyecto;
+  reporte: any;
+  reporteTemp: ReporteTiempo = new ReporteTiempo();
+  listReportes: ReporteTiempo[] = [];
   file: File;
-
   formCliente: FormGroup;
+  dataSource = new MatTableDataSource();
 
   constructor(
+    private reporteTiempoService: ReporteTiempoService,
+    private empleadoService: EmpleadoService,
+    private actividadService: ActividadService,
     private clienteService: ClienteService,
     private proyectoService: ProyectoService,
     private formBuilder: FormBuilder,
     private router: Router,
     private toastr: ToastrService) { }
 
+  columnas: string[] = ['Cliente', 'Proyecto', 'Actividad', 'NombresRecurso', 'FechaReporte', 'Horas'];
   session = localStorage.getItem('session');
   sessionObject: EmpleadoString = new EmpleadoString();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit(): void {
     this.sessionObject = JSON.parse(this.session);
@@ -43,9 +54,6 @@ export class CargaMasivaComponent implements OnInit {
     if (this.session['rol'] != 'ROL_ADMIN' && this.session['rol'] != 'ROL_LP' && this.session['rol'] != 'ROL_GP' && this.session['rol'] != 'ROL_DP') {
       this.router.navigate(['/error']);
     }
-
-    this.getClientes();
-    this.getProyectos();
     this.buildFormCliente();
   }
 
@@ -53,62 +61,98 @@ export class CargaMasivaComponent implements OnInit {
 
   buildFormCliente() {
     this.formCliente = this.formBuilder.group({
-      cliente: ['', [
-        Validators.required
-      ]],
-      proyecto: ['', [
-        Validators.required
-      ]],
-      archivo: ['',[]],
+      archivo: ['', []],
     });
   }
 
-  getProyectos() {
-    this.proyectoService.getProyectosList().subscribe(data => {
-      this.proyectos = data;
-      console.log(this.proyectos);
-    }, error => {
-      console.log(error);
-    })
-  }
-
-  getClientes() {
-    this.clienteService.getClientesList().subscribe(data => {
-      this.clientes = data;
-      console.log(this.clientes);
-    }, error => {
-      console.log(error);
-    })
-  }
-
-  filtrarProyectos() {
-    this.proyectosFiltrados = this.proyectos.filter(p => p.cliente.nomenclatura === this.cliente.nomenclatura && ![6, 8, 9].includes(p.estadoProyecto.id));
-  }
-
-
   onSubmit() {
     console.log(this.file);
+
     if (this.formCliente.invalid || this.file === undefined) {
       this.formCliente.markAllAsTouched();
       return;
     }
 
-    this.proyectoService.createCargaMasiva(this.file).subscribe(data => {
-      console.log(data);
-      this.toastr.success("Cargue realizado Correctamente");
-    }, error => {
-      console.log(error);
-      this.toastr.error("El archivo no cuenta con los campos deseados.");
+
+    this.listReportes.length = 0;
+
+    this.reporte.forEach(obj => {
+      this.reporteTemp.actividad = new ActividadAsignada();
+      this.reporteTemp.estado = new EstadoReporteTiempo();
+      this.actividadService.getActividadByActividad(obj.Actividad).subscribe(data => {
+        this.reporteTemp.actividad.actividad = data;
+      })
+
+      this.reporteTemp.fecha = obj.FechaReporte;
+      this.reporteTemp.horas = obj.Horas;
+
+
+      this.proyectoService.getProyectoByName(obj.Proyecto).subscribe(data => {
+        this.reporteTemp.proyecto = data;
+        this.reporteTemp.actividad.proyecto = data;
+        this.reporteTemp.estado.id = 1;
+        this.empleadoService.getEmpleadoByNombre(obj.NombreRecurso).subscribe(data => {
+          this.reporteTemp.empleado = data;
+        }, error => {
+          console.log(error.error.message);
+        });
+      }, error => {
+        console.log(error.error.message);
+      });
+
+      this.listReportes.push(this.reporteTemp);
+      this.reporteTiempoService.enviarProyectoInt(this.reporteTemp).subscribe(data => {
+        console.log(this.reporte);
+        this.toastr.success('Reporte enviado correctamente!');
+      }, error => {
+        this.toastr.error(error.error);
+      });
     })
 
-    
+    console.log(this.listReportes);
+
+
     // window.location.reload();
   }
 
   onFileSelected(event: any) {
     this.file = event.target.files[0];
     if (this.file) {
-      console.log('Archivo seleccionado:', this.file);
+      this.proyectoService.createCargaMasiva(this.file).subscribe(data => {
+        this.reporte = data;
+        this.dataSource = new MatTableDataSource(this.castListObjectToStringList(this.reporte));
+        this.dataSource.paginator = this.paginator;
+        console.log(this.reporte);
+      }, error => {
+        console.log(error);
+        this.toastr.error("El archivo no cuenta con los campos deseados.");
+      })
     }
   }
+
+  castListObjectToStringList(listaObj: any[]) {
+    let listString: ReporteList[] = [];
+
+    listaObj.forEach(obj => {
+      let string: ReporteList = new ReporteList();
+      string.Actividad = obj.Actividad;
+      string.Cliente = obj.Cliente;
+      string.FechaReporte = obj.FechaReporte;
+      string.Horas = obj.Horas;
+      string.Proyecto = obj.Proyecto;
+      string.NombreRecurso = obj.NombreRecurso;
+      listString.push(string);
+    });
+
+    return listString;
+  }
+}
+
+export class ReporteList {
+  Cliente: string;
+  Proyecto: string;
+  Actividad: string;
+  NombreRecurso: string;
+  FechaReporte: Date;
+  Horas: number;
 }

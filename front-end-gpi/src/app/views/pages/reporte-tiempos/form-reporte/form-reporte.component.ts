@@ -187,6 +187,7 @@ export class FormReporteComponent implements OnInit {
             if (this.proyecto.interno) {
                 this.reporteService.enviarProyectoInt(this.reporte).pipe(finalize(() => this.getTiemposReportados())
                 ).subscribe(data => {
+                    console.log(this.reporte);
                     this.toastr.success('Reporte enviado correctamente!');
                     this.hideSpinner();
                     this.cancelReporte();
@@ -199,6 +200,7 @@ export class FormReporteComponent implements OnInit {
             } else {
                 this.reporteService.enviar(this.reporte).pipe(finalize(() => this.getTiemposReportados())
                 ).subscribe(data => {
+                    console.log(this.reporte);
                     this.toastr.success('Reporte enviado correctamente!');
                     this.hideSpinner();
                     this.cancelReporte();

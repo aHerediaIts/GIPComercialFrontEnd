@@ -18,55 +18,73 @@
                 <form [formGroup]="formCliente" (ngSubmit)="onSubmit()" id="cargaMasivaForm"
                     enctype="multipart/form-data">
                     <div class="form-row">
-                        <div class="form-group col-sm-12 col-md-4">
-                            <label for="cliente">Cliente</label>
-                            <select formControlName="cliente" (change)="filtrarProyectos()" [(ngModel)]="cliente"
-                                [ngClass]="{'is-invalid': fp.cliente.errors && fp.cliente.touched}" id="cliente" class="form-control"
-                                autocomplete="off">
-                                <option [value]="undefined" disabled hidden>Seleccionar cliente</option>
-                                <option *ngFor="let clt of clientes" [ngValue]="clt">{{ clt.nombre }}</option>
-                            </select>
-                            <div class="invalid-feedback" *ngIf="fp.cliente.errors && fp.cliente.touched">
-                                <div *ngIf="fp.cliente.errors.required">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-12 col-md-8">
-                            <label for="proyecto">Proyecto</label>
-                            <select formControlName="proyecto" [(ngModel)]="proyecto"
-                                [ngClass]="{'is-invalid': fp.proyecto.errors}" id="proyecto" class="form-control"
-                                autocomplete="off">
-                                <option [value]="undefined" disabled hidden>Seleccionar proyecto</option>
-                                <option *ngFor="let p of proyectosFiltrados" [ngValue]="p"> {{ p.nombre }} -
-                                    {{p.descripcion}} </option>
-                            </select>
-                            <div class="invalid-feedback" *ngIf="fp.proyecto.errors && fp.proyecto.touched">
-                                <div *ngIf="fp.proyecto.errors.required">
-                                    Este campo es requerido.
-                                </div>
-                            </div>
-                            <div *ngIf="cliente === undefined" class="invalid-feedback">
-                                <div *ngIf="formCliente.controls.proyecto.errors">
-                                    Seleccione un cliente para cargar los proyectos.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-12">
+                        <div class="form-group col-10">
                             <label for="archivo"></label>
-                            <input type="file" id="archivo" (change)="onFileSelected($event)"
-                                class="form-control-file" [ngClass]="{'is-invalid': file === undefined}" accept=".xlsx, .xls">
+                            <input type="file" id="archivo" (change)="onFileSelected($event)" class="form-control-file"
+                                [ngClass]="{'is-invalid': file === undefined}" accept=".xlsx, .xls">
                             <div class="invalid-feedback" *ngIf="file === undefined">
                                 Debes seleccionar un archivo.
                             </div>
-
+                        </div>
+                        <div class="form-group col-2">
+                            <button type="submit" id="btnSelectProyecto" class="btn btn-light">Realizar Cargue
+                                Masivo</button>
                         </div>
                     </div>
-                    <button type="submit" id="btnSelectProyecto" class="btn btn-light">Realizar Cargue Masivo</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="file" class="row justify-content-center" id="occ">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <span>Lista de tiempos a reportar </span>
+                </h6>
+                
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="table-hover">
+
+                        <ng-container matColumnDef="Cliente">
+                            <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.Cliente}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Proyecto">
+                            <th mat-header-cell *matHeaderCellDef> Proyecto </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.Proyecto}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Actividad">
+                            <th mat-header-cell *matHeaderCellDef> Actividad </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.Actividad}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="NombresRecurso">
+                            <th mat-header-cell *matHeaderCellDef> Nombre recurso </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.NombreRecurso}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="FechaReporte">
+                            <th mat-header-cell *matHeaderCellDef> Fecha reporte </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.FechaReporte}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Horas">
+                            <th mat-header-cell *matHeaderCellDef> Horas </th>
+                            <td mat-cell *matCellDef="let proyecto"> {{proyecto.Horas}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Selecciona la página de proyectos">
+                    </mat-paginator>
+                </div>
             </div>
         </div>
     </div>

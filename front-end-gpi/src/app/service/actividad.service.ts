@@ -32,6 +32,10 @@ export class ActividadService {
     return this.httpClient.get<Actividad>(`${this.baseUrl}/${id}`, { headers: this.header});
   }
 
+  getActividadByActividad(actividad: string): Observable<Actividad> {
+    return this.httpClient.get<Actividad>(`${this.baseUrl}/carga-masiva/${actividad}`, { headers: this.header});
+  }
+
   deleteActividad(id: number): Observable<Object> {
     return this.httpClient.delete(`${this.baseUrl}/${id}`, { headers: this.header});
   }

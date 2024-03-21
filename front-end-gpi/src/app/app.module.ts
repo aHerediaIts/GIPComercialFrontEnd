@@ -21,6 +21,7 @@ import { UpdateClientesComponent } from './views/pages/clientes/update-clientes/
 import { ProgramarFacturacionComponent } from './views/pages/facturacion/programar-facturacion/programar-facturacion.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule} from '@angular/material/paginator';
 import { ToastrModule } from 'ngx-toastr';
 import { ListProyectoComponent } from './views/pages/proyectos/list-proyectos/list-proyectos.component';
 import { FormProyectoComponent } from './views/pages/proyectos/form-proyecto/form-proyecto.component';
@@ -113,6 +114,7 @@ registerLocaleData(localeEs, 'es');
         FormsModule,
         MatInputModule,
         MatTableModule,
+        MatPaginatorModule,
         MatSortModule,
         MatCheckboxModule,
         MatGridListModule,

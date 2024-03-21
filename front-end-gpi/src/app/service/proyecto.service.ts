@@ -42,6 +42,10 @@ export class ProyectoService {
         return this.httpClient.get<Proyecto>(`${this.baseUrl}/${id}`, { headers: this.header });
     }
 
+    getProyectoByName(nombre: string): Observable<Proyecto> {
+        return this.httpClient.get<Proyecto>(`${this.baseUrl}/carga-masiva/${nombre}`, { headers: this.header });
+    }
+
     updateProyecto(id: number, proyecto: Proyecto, creator: number): Observable<Object> {
         return this.httpClient.put(`${this.baseUrl}/${id}/${creator}`, proyecto, { headers: this.header });
     }
