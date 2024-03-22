@@ -509,6 +509,7 @@ export class PlaneacionComponent implements OnInit {
     addRecurso() {
         let list: RecursoActividad[] = [];
         let flag: boolean = false;
+        let validadarID: boolean = false;
 
         this.newRecursosActividades.forEach(actividad => {
             if (actividad.checked) {
@@ -518,6 +519,16 @@ export class PlaneacionComponent implements OnInit {
 
         if (!flag) {
             return this.toast.error('No ha seleccionado ninguna fecha');
+        }
+
+        this.newRecursosActividades.forEach(validador => {
+            if (validador.actividad.proyecto.cliente.validadorIdRecurso != null && validador.empleado.scotiaID == null) {
+                validadarID = true;
+            }
+        });
+
+        if (!validadarID) {
+            return this.toast.warning('El recurso, no tiene un id de recurso, como lo solicita el cliente');
         }
 
         this.newRecursosActividades.forEach(recurso => {
@@ -530,14 +541,8 @@ export class PlaneacionComponent implements OnInit {
             if (recursoAct.actividad.proyecto.interno) {
                 recursoAct.asignador = 'SISTEMA';
             }
-
             recursoAct.asignador = this.sessionObject.nombre;
         });
-        for(let i=0; i<list.length; i++){
-            const validador = list[i];
-            if( validador.actividad.proyecto.cliente.validadorIdRecurso != null && validador.empleado.scotiaID == null){
-                    this.toast.warning('El recurso, no tiene un id de recurso, como lo solicita el cliente');
-            }else{
                 this.recursoActService.createRecursoActividadList(list).subscribe(data => {
                     this.hideDisponibilidad();
                     this.getEmpleadoAsignados();
@@ -556,8 +561,6 @@ export class PlaneacionComponent implements OnInit {
                     console.log(error);
                     this.toast.error(error.error);
                 });
-            }
-        }
     }
 
     getEmpleadoAsignados() {
