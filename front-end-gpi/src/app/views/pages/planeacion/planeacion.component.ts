@@ -524,10 +524,11 @@ export class PlaneacionComponent implements OnInit {
         this.newRecursosActividades.forEach(validador => {
             if (validador.actividad.proyecto.cliente.validadorIdRecurso != null && validador.empleado.scotiaID == null) {
                 validadarID = true;
+                
             }
         });
 
-        if (!validadarID) {
+        if (validadarID) {
             return this.toast.warning('El recurso, no tiene un id de recurso, como lo solicita el cliente');
         }
 

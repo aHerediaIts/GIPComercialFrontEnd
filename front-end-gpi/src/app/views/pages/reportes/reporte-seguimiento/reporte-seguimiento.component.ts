@@ -8,6 +8,7 @@ import { ProyectoService } from "src/app/service/proyecto.service";
 import * as XLSX from 'xlsx';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Console } from "console";
+import { ReporteTiempo } from "src/app/model/reporte-tiempo";
 
 @Component({
     selector: 'app-reporte-seguimiento',
@@ -25,6 +26,7 @@ export class ReporteSeguimiento implements OnInit{
     formBuilder: FormBuilder;
     errorMsj: string = "";
     submitted: boolean = false;
+    reporteTiempo: ReporteTiempo[]
     
 
     constructor(
@@ -123,17 +125,20 @@ export class ReporteSeguimiento implements OnInit{
         fechaFin.setDate(fechaFin.getDate() + 1);
     
         
-        console.log(fechaI,fechaF,fechaInicio,fechaFin, this.rfSeleccionado, this.tipoReporteSeleccionado.tipo);
+       
         
         switch(this.tipoReporteSeleccionado.tipo) {
             case 'INACTIVOS':
                 this.tipoReporteService.getAllRecursosInactivos(fechaI, fechaF, this.rfSeleccionado.rfProyecto).subscribe(data => {
                     this.listaProyecto = data;
-                    console.log(this.listaProyecto);
                 });
                 
                 break;
             case 'CONTROL HORAS':
+                    this.tipoReporteService.getAllReporteTiempo().subscribe(data => { 
+                        this.reporteTiempo = data;
+                    });
+                    break;
             case 'SEGUIMIENTO ANUAL':
                     this.tipoReporteService.getAllRecursoActivida(fechaI, fechaF, this.rfSeleccionado.rfProyecto).subscribe(data => { 
                         this.listaProyecto = data;

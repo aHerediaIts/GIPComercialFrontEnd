@@ -6,6 +6,7 @@ import { TipoReporte } from '../model/tipo-reporte';
 import { HttpHeaderApp } from './header';
 import { RecursoActividad } from '../model/recurso-actividad';
 import { Proyecto } from '../Model/proyecto';
+import { ReporteTiempo } from '../model/reporte-tiempo';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,9 @@ export class TipoReporteService {
     
     getAllProyectosIngenierosyalfa(fechaInicio: string, fechaFin: string, rf_proyecto: String): Observable<RecursoActividad[]> {
       return this.httpClient.get<RecursoActividad[]>(`${this.baseUrl}/reporte/alfa/${fechaInicio}/${fechaFin}/${rf_proyecto}`, { headers: this.header});
+    }
+
+    getAllReporteTiempo(): Observable<ReporteTiempo[]> {
+      return this.httpClient.get<ReporteTiempo[]>(`${this.baseUrl}/reporte/control-horas`, { headers: this.header });
     }
 }
