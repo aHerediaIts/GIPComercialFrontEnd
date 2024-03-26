@@ -121,7 +121,7 @@ export class CargaMasivaComponent implements OnInit {
     forkJoin(observables).subscribe(() => {
       if (this.reporte.length === this.listReportes.length) {
         this.reporteTiempoService.cargaMasiva(this.listReportes).subscribe(data => {
-          this.toastr.success('Reporte enviado correctamente!');
+          this.toastr.success('Ha realizado el cargue con éxito!');
         }, error => {
           this.toastr.error(error.error.message);
         });
