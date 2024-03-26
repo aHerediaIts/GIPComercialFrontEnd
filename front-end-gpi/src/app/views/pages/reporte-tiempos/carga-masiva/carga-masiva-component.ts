@@ -123,7 +123,8 @@ export class CargaMasivaComponent implements OnInit {
         this.reporteTiempoService.cargaMasiva(this.listReportes).subscribe(data => {
           this.toastr.success('Ha realizado el cargue con éxito!');
         }, error => {
-          this.toastr.error(error.error.message);
+          console.log(error);
+          this.toastr.error(error.error);
         });
       }
     });

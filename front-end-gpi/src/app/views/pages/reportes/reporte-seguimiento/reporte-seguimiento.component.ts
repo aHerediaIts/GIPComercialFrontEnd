@@ -6,6 +6,9 @@ import { RecursoActividad } from "src/app/model/recurso-actividad";
 import { Proyecto } from "src/app/Model/proyecto";
 import { ProyectoService } from "src/app/service/proyecto.service";
 import * as XLSX from 'xlsx';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Console } from "console";
+import { ReporteTiempo } from "src/app/model/reporte-tiempo";
 
 @Component({
     selector: 'app-reporte-seguimiento',
@@ -19,6 +22,12 @@ export class ReporteSeguimiento implements OnInit{
     Proyectos: Proyecto[];
     rfProyecto: Proyecto;
     rfSeleccionado: Proyecto;
+    form: FormGroup;
+    formBuilder: FormBuilder;
+    errorMsj: string = "";
+    submitted: boolean = false;
+    reporteTiempo: ReporteTiempo[]
+    
 
     constructor(
         private router: Router,
@@ -42,31 +51,11 @@ export class ReporteSeguimiento implements OnInit{
             this.listaTipoReporte = data;
             // Inicialmente, seleccionamos el primer tipo de reporte
             if (this.listaTipoReporte.length > 0) {
-                this.tipoReporteSeleccionado = this.listaTipoReporte[0];
-                this.TipoReporteClick();
+                this.tipoReporteSeleccionado = this.listaTipoReporte[0]; 
             }
         }, error => {
             console.log(error);
         });
-    }
-
-    TipoReporteClick() {
-        // Dependiendo del tipo de reporte seleccionado, se realiza una acción específica
-        switch(this.tipoReporteSeleccionado.tipo) {
-            case 'INACTIVOS':
-                this.tipoReporteService.getAllRecursoActividad().subscribe(data => {
-                    this.listaProyecto = data;
-                });
-                break;
-            case 'CONTROL HORAS':
-            case 'SEGUIMIENTO ANUAL':
-            case 'SEGUIMIENTO INGENIEROS Y ALFA':
-                // Para otros tipos de reporte, inicializamos la listaProyecto como vacía
-                this.listaProyecto = [];
-                break;
-            default:
-                break;
-        }
     }
 
     hacerReporte()  {
@@ -111,5 +100,58 @@ export class ReporteSeguimiento implements OnInit{
 
         // Descargar el archivo Excel
         XLSX.writeFile(wb, fileName);
+    }
+
+    buildForm() {
+        this.form = this.formBuilder.group({
+          fechaInicio: ["", [Validators.required]],
+          fechaFin: ["", [Validators.required]],
+        });
+    }
+
+    get f() {
+        return this.form.controls;
+    }
+
+    search() {
+    
+        let fechaI = (<HTMLInputElement>document.getElementById("fechaInicio")).value;
+        let fechaF = (<HTMLInputElement>document.getElementById("fechaFin")).value;
+    
+        let fechaInicio = new Date(fechaI);
+        let fechaFin = new Date(fechaF);
+    
+        fechaInicio.setDate(fechaInicio.getDate() + 1);
+        fechaFin.setDate(fechaFin.getDate() + 1);
+    
+        
+       
+        
+        switch(this.tipoReporteSeleccionado.tipo) {
+            case 'INACTIVOS':
+                this.tipoReporteService.getAllRecursosInactivos(fechaI, fechaF, this.rfSeleccionado.rfProyecto).subscribe(data => {
+                    this.listaProyecto = data;
+                });
+                
+                break;
+            case 'CONTROL HORAS':
+                    this.tipoReporteService.getAllReporteTiempo().subscribe(data => { 
+                        this.reporteTiempo = data;
+                    });
+                    break;
+            case 'SEGUIMIENTO ANUAL':
+                    this.tipoReporteService.getAllRecursoActivida(fechaI, fechaF, this.rfSeleccionado.rfProyecto).subscribe(data => { 
+                        this.listaProyecto = data;
+                    });
+            break;
+                
+            case 'SEGUIMIENTO INGENIEROS Y ALFA':
+                this.tipoReporteService.getAllProyectosIngenierosyalfa(fechaI, fechaF, this.rfSeleccionado.rfProyecto).subscribe(data => { 
+                    this.listaProyecto = data;
+                });
+            break;
+            default:
+                break;
+        }
     }
 }
